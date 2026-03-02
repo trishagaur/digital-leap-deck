@@ -107,8 +107,8 @@ const MetricsSection = () => {
       
       <div className="section-container relative" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
-          <h2 className="section-title">Numbers That Speak</h2>
           <span className="section-overline">Impact Dashboard</span>
+          <h2 className="section-title">Numbers That Speak</h2>
         </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">

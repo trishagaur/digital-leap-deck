@@ -89,10 +89,10 @@ const DeliverySection = () => {
 
       <div className="section-container relative" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <span className="section-overline">The Delivery Engine</span>
           <h2 className="section-title">
             How We Built the Impossible
           </h2>
-          <span className="section-overline">The Delivery Engine</span>
           <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-lg">
             Leveraging AI and modern engineering to achieve in one year what typically takes three.
           </p>

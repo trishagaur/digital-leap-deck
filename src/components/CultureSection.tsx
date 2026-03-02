@@ -77,8 +77,8 @@ const CultureSection = () => {
       )}
       <div className="section-container" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
-          <h2 className="section-title">Culture Is Our Superpower</h2>
           <span className="section-overline">Why We Win</span>
+          <h2 className="section-title">Culture Is Our Superpower</h2>
         </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">

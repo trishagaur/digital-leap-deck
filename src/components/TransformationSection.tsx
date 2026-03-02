@@ -71,10 +71,10 @@ const TransformationSection = () => {
       )}
       <div className="section-container" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <span className="section-overline">The Transformation</span>
           <h2 className="section-title">
             The Pivot That Changed Everything
           </h2>
-          <span className="section-overline">The Transformation</span>
         </FloatingScrollCard>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">

@@ -50,14 +50,20 @@ export const FloatingScrollCard = ({
   const toX   = tdx * travel;
   const toY   = tdy * travel;
 
-  // stagger=0 → header (entryStart 0.22), stagger=1 → 0.26, stagger=5 → 0.42.
-  // 0.04 step keeps the cascade tight so all cards are settled well before exit.
-  // exitStart=0.82 gives a generous dwell window — even with 5 cards (settled at 0.68)
-  // the header won't start leaving until 0.82, a 14% rest where everything is on-screen.
-  const entryStart = 0.22 + stagger * 0.04;
-  const entryEnd   = entryStart + 0.26;          // 26 % window = slow graceful glide
-  const exitStart  = 0.82;
-  const exitEnd    = 0.95;
+  // For a 130vh section with offset ["start end","end start"], total scroll range = 230vh.
+  // The section header (top of content) reaches the viewport top at progress ≈ 100/230 = 0.435.
+  // We need ALL cards to finish entering BEFORE that point so nothing is still sliding
+  // when the header is at the top.
+  //
+  // stagger=0 → entry 0.05→0.27   (header arrives first)
+  // stagger=1 → entry 0.075→0.295
+  // stagger=5 → entry 0.175→0.395  (last card settles at 0.395 < 0.435 ✓)
+  //
+  // exitStart=0.72 gives a 0.325 dwell (≈75vh reading room) before anything leaves.
+  const entryStart = 0.05 + stagger * 0.025;
+  const entryEnd   = entryStart + 0.22;          // 22 % window — graceful but early
+  const exitStart  = 0.72;
+  const exitEnd    = 0.90;
 
   const x = useTransform(
     scrollYProgress,
@@ -71,7 +77,7 @@ export const FloatingScrollCard = ({
   );
   const opacity = useTransform(
     scrollYProgress,
-    [0, entryStart, Math.min(entryStart + 0.16, entryEnd), exitStart, exitEnd, 1],
+    [0, entryStart, Math.min(entryStart + 0.12, entryEnd), exitStart, exitEnd, 1],
     [0, 0, 1, 1, 0, 0],
   );
 
