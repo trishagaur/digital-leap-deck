@@ -3,7 +3,6 @@ import {
   useInView,
   useReducedMotion,
   useScroll,
-  useSpring,
 } from "framer-motion";
 import { useRef } from "react";
 import { TrendingUp, Zap, Clock, ShieldCheck, Rocket } from "lucide-react";
@@ -62,47 +61,47 @@ const cardVariants = {
   }),
 };
 
-// Each icon launches from a far off-screen corner, settles mid-section, then drifts back out
+// True off-screen distances — icons travel the full viewport width/height
 const floatingIcons: FloatingIconDef[] = [
   {
     icon: TrendingUp,
     className: "left-6 top-14 sm:left-12",
-    from: { x: -950, y: -700, rotate: -35 },
-    to:   { x:  600, y:  500, rotate:  22 },
+    from: { x: -1600, y: -1100, rotate: -42 },
+    to:   { x:  1200, y:   900, rotate:  28 },
     size: "w-16 h-16",
-    loopDuration: 44,
+    loopDuration: 38,
   },
   {
     icon: Zap,
     className: "right-6 top-20 sm:right-14",
-    from: { x:  900, y: -650, rotate:  40 },
-    to:   { x: -550, y:  480, rotate: -28 },
+    from: { x:  1550, y: -1050, rotate:  46 },
+    to:   { x: -1150, y:   880, rotate: -32 },
     size: "w-14 h-14",
-    loopDuration: 50,
+    loopDuration: 42,
   },
   {
     icon: Clock,
     className: "left-8 bottom-16 sm:left-16",
-    from: { x: -880, y:  720, rotate: -30 },
-    to:   { x:  520, y: -520, rotate:  26 },
+    from: { x: -1500, y:  1200, rotate: -38 },
+    to:   { x:  1100, y: -1000, rotate:  30 },
     size: "w-20 h-20",
-    loopDuration: 54,
+    loopDuration: 44,
   },
   {
     icon: ShieldCheck,
     className: "right-8 bottom-14 sm:right-16",
-    from: { x:  860, y:  680, rotate:  32 },
-    to:   { x: -500, y: -490, rotate: -24 },
+    from: { x:  1450, y:  1150, rotate:  38 },
+    to:   { x: -1050, y:  -950, rotate: -28 },
     size: "w-16 h-16",
-    loopDuration: 48,
+    loopDuration: 40,
   },
   {
     icon: Rocket,
     className: "left-1/2 -translate-x-1/2 top-4",
-    from: { x: -120, y: -800, rotate: -20 },
-    to:   { x:  140, y:  600, rotate:  18 },
+    from: { x:  -200, y: -1400, rotate: -26 },
+    to:   { x:   220, y:  1200, rotate:  22 },
     size: "w-14 h-14",
-    loopDuration: 58,
+    loopDuration: 46,
   },
 ];
 
@@ -115,21 +114,14 @@ const MetricsSection = () => {
     offset: ["start end", "end start"],
   });
 
-  // Ultra-slow spring — icons trail far behind scroll, like Jeton
-  const slowScroll = useSpring(scrollYProgress, {
-    stiffness: 5,
-    damping: 32,
-    mass: 3.2,
-  });
-
   return (
     <section id="impact" className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/30" />
 
       {!reduceMotion && (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
           {floatingIcons.map((item, i) => (
-            <FloatingScrollIcon key={`mf-${i}`} {...item} slowScroll={slowScroll} />
+            <FloatingScrollIcon key={`mf-${i}`} {...item} scrollYProgress={scrollYProgress} />
           ))}
         </div>
       )}

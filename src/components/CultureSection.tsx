@@ -1,4 +1,4 @@
-import { motion, useInView, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { Heart, MessageCircle, Award, Star, Users } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
@@ -25,34 +25,34 @@ const floatingIcons: FloatingIconDef[] = [
   {
     icon: Heart,
     className: "left-4 top-12 sm:left-10",
-    from: { x: -910, y: -670, rotate: -30 },
-    to:   { x:  570, y:  510, rotate:  20 },
+    from: { x: -1560, y: -1060, rotate: -34 },
+    to:   { x:  1160, y:   880, rotate:  22 },
     size: "w-16 h-16",
-    loopDuration: 46,
+    loopDuration: 38,
   },
   {
     icon: Star,
     className: "right-4 top-16 sm:right-12",
-    from: { x:  870, y: -640, rotate:  34 },
-    to:   { x: -530, y:  490, rotate: -24 },
+    from: { x:  1500, y: -1000, rotate:  38 },
+    to:   { x: -1100, y:   840, rotate: -26 },
     size: "w-12 h-12",
-    loopDuration: 52,
+    loopDuration: 42,
   },
   {
     icon: Users,
     className: "left-6 bottom-14 sm:left-14",
-    from: { x: -850, y:  700, rotate: -26 },
-    to:   { x:  500, y: -490, rotate:  22 },
+    from: { x: -1460, y:  1160, rotate: -30 },
+    to:   { x:  1060, y:  -960, rotate:  24 },
     size: "w-16 h-16",
-    loopDuration: 54,
+    loopDuration: 44,
   },
   {
     icon: Award,
     className: "right-6 bottom-12 sm:right-14",
-    from: { x:  830, y:  660, rotate:  28 },
-    to:   { x: -470, y: -470, rotate: -20 },
+    from: { x:  1400, y:  1100, rotate:  32 },
+    to:   { x: -1000, y:  -900, rotate: -22 },
     size: "w-14 h-14",
-    loopDuration: 48,
+    loopDuration: 40,
   },
 ];
 
@@ -97,7 +97,7 @@ const CultureSection = () => {
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
-            <FloatingScrollIcon key={`cf-${i}`} {...item} slowScroll={slowScroll} />
+            <FloatingScrollIcon key={`cf-${i}`} {...item} scrollYProgress={scrollYProgress} />
           ))}
         </div>
       )}

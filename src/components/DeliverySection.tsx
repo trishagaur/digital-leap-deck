@@ -1,4 +1,4 @@
-import { motion, useInView, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bot, GitBranch, ToggleRight, Code, Cpu, Layers } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
@@ -28,34 +28,34 @@ const floatingIcons: FloatingIconDef[] = [
   {
     icon: Bot,
     className: "left-4 top-12 sm:left-10",
-    from: { x: -930, y: -680, rotate: -32 },
-    to:   { x:  580, y:  510, rotate:  22 },
+    from: { x: -1580, y: -1080, rotate: -38 },
+    to:   { x:  1180, y:   900, rotate:  24 },
     size: "w-16 h-16",
-    loopDuration: 46,
+    loopDuration: 38,
   },
   {
     icon: Code,
     className: "right-4 top-16 sm:right-12",
-    from: { x:  890, y: -650, rotate:  36 },
-    to:   { x: -550, y:  490, rotate: -26 },
+    from: { x:  1520, y: -1020, rotate:  42 },
+    to:   { x: -1120, y:   860, rotate: -28 },
     size: "w-14 h-14",
-    loopDuration: 52,
+    loopDuration: 42,
   },
   {
     icon: Layers,
     className: "left-6 bottom-14 sm:left-14",
-    from: { x: -860, y:  710, rotate: -28 },
-    to:   { x:  510, y: -510, rotate:  24 },
-    size: "w-18 h-18",
-    loopDuration: 56,
+    from: { x: -1480, y:  1180, rotate: -34 },
+    to:   { x:  1080, y:  -980, rotate:  28 },
+    size: "w-20 h-20",
+    loopDuration: 44,
   },
   {
     icon: Cpu,
     className: "right-6 bottom-12 sm:right-14",
-    from: { x:  840, y:  670, rotate:  30 },
-    to:   { x: -490, y: -480, rotate: -22 },
+    from: { x:  1420, y:  1120, rotate:  36 },
+    to:   { x: -1020, y:  -920, rotate: -26 },
     size: "w-14 h-14",
-    loopDuration: 50,
+    loopDuration: 40,
   },
 ];
 
@@ -67,12 +67,6 @@ const DeliverySection = () => {
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
-  });
-
-  const slowScroll = useSpring(scrollYProgress, {
-    stiffness: 5,
-    damping: 32,
-    mass: 3.2,
   });
 
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
@@ -88,7 +82,7 @@ const DeliverySection = () => {
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
-            <FloatingScrollIcon key={`df-${i}`} {...item} slowScroll={slowScroll} />
+            <FloatingScrollIcon key={`df-${i}`} {...item} scrollYProgress={scrollYProgress} />
           ))}
         </div>
       )}
