@@ -1,10 +1,58 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { useRef } from "react";
-import { FileText, Phone, Clock, Shield, Zap, Smartphone } from "lucide-react";
+import { FileText, Phone, Clock, Shield, Zap, Smartphone, RefreshCw, Sparkles } from "lucide-react";
+import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
+
+const floatingIcons: FloatingIconDef[] = [
+  {
+    icon: FileText,
+    className: "left-4 top-12 sm:left-10",
+    from: { x: -920, y: -680, rotate: -30 },
+    to:   { x:  580, y:  520, rotate:  20 },
+    size: "w-14 h-14",
+    loopDuration: 46,
+  },
+  {
+    icon: Sparkles,
+    className: "right-4 top-16 sm:right-12",
+    from: { x:  880, y: -640, rotate:  36 },
+    to:   { x: -540, y:  500, rotate: -26 },
+    size: "w-12 h-12",
+    loopDuration: 52,
+  },
+  {
+    icon: RefreshCw,
+    className: "left-6 bottom-14 sm:left-14",
+    from: { x: -860, y:  700, rotate: -28 },
+    to:   { x:  500, y: -500, rotate:  24 },
+    size: "w-16 h-16",
+    loopDuration: 56,
+  },
+  {
+    icon: Shield,
+    className: "right-6 bottom-12 sm:right-14",
+    from: { x:  840, y:  660, rotate:  30 },
+    to:   { x: -480, y: -480, rotate: -22 },
+    size: "w-14 h-14",
+    loopDuration: 50,
+  },
+];
 
 const TransformationSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: false, margin: "-80px" });
+  const reduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const slowScroll = useSpring(scrollYProgress, {
+    stiffness: 5,
+    damping: 32,
+    mass: 3.2,
+  });
 
   const beforeItems = [
     { icon: FileText, label: "Paper withdrawal forms" },
@@ -20,6 +68,13 @@ const TransformationSection = () => {
 
   return (
     <section id="mission" className="py-32 relative overflow-hidden">
+      {!reduceMotion && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {floatingIcons.map((item, i) => (
+            <FloatingScrollIcon key={`tf-${i}`} {...item} slowScroll={slowScroll} />
+          ))}
+        </div>
+      )}
       <div className="section-container" ref={ref}>
         <motion.div
           initial={{ opacity: 0, y: 40 }}

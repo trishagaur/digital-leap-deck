@@ -1,14 +1,13 @@
 import {
-  type MotionValue,
   motion,
   useInView,
   useReducedMotion,
   useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
-import { type ComponentType, useRef } from "react";
+import { useRef } from "react";
 import { TrendingUp, Zap, Clock, ShieldCheck, Rocket } from "lucide-react";
+import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
 
 const metrics = [
   {
@@ -63,120 +62,47 @@ const cardVariants = {
   }),
 };
 
-type FloatingIconConfig = {
-  icon: ComponentType<{ className?: string }>;
-  className: string;
-  xRange: [number, number];
-  yRange: [number, number];
-  rotateRange: [number, number];
-  size: string;
-  loopDuration: number;
-  drift: [number, number, number];
-};
-
-const FloatingMetricIcon = ({
-  item,
-  index,
-  slowScroll,
-  reduceMotion,
-}: {
-  item: FloatingIconConfig;
-  index: number;
-  slowScroll: MotionValue<number>;
-  reduceMotion: boolean | null;
-}) => {
-  const Icon = item.icon;
-  // 3-point: icons arrive from far off (0), settle at center (0.5), then drift back out (1)
-  const x = useTransform(slowScroll, [0, 0.5, 1], [item.xRange[0], 0, item.xRange[1]]);
-  const y = useTransform(slowScroll, [0, 0.5, 1], [item.yRange[0], 0, item.yRange[1]]);
-  const rotate = useTransform(slowScroll, [0, 0.5, 1], [item.rotateRange[0], 0, item.rotateRange[1]]);
-  const opacity = useTransform(slowScroll, [0, 0.35, 0.5, 0.65, 1], [0, 0.55, 0.75, 0.55, 0]);
-  const scale = useTransform(slowScroll, [0, 0.5, 1], [0.6, 1.1, 0.7]);
-
-  return (
-    <motion.div
-      className={`absolute ${item.className}`}
-      style={{ x, y, rotate, opacity, scale }}
-      animate={
-        reduceMotion
-          ? undefined
-          : {
-              x: [0, item.drift[0] * 0.4, -item.drift[1] * 0.4, 0],
-              y: [0, -item.drift[1] * 0.4, item.drift[2] * 0.4, 0],
-            }
-      }
-      transition={
-        reduceMotion
-          ? undefined
-          : {
-              duration: item.loopDuration * 2 + index * 2,
-              ease: "easeInOut",
-              repeat: Infinity,
-            }
-      }
-    >
-      <div className={`${item.size} rounded-2xl bg-primary/15 border border-primary/30 backdrop-blur-xl flex items-center justify-center shadow-[0_0_55px_hsl(var(--primary)/0.32)]`}>
-        <Icon className="w-6 h-6 text-primary/90" />
-      </div>
-    </motion.div>
-  );
-};
-
-const floatingIcons: FloatingIconConfig[] = [
+// Each icon launches from a far off-screen corner, settles mid-section, then drifts back out
+const floatingIcons: FloatingIconDef[] = [
   {
-    // top-left: enters from far top-left corner
     icon: TrendingUp,
-    className: "left-4 top-16 sm:left-10",
-    xRange: [-320, 200],
-    yRange: [-280, 160],
-    rotateRange: [-32, 22],
+    className: "left-6 top-14 sm:left-12",
+    from: { x: -950, y: -700, rotate: -35 },
+    to:   { x:  600, y:  500, rotate:  22 },
+    size: "w-16 h-16",
+    loopDuration: 44,
+  },
+  {
+    icon: Zap,
+    className: "right-6 top-20 sm:right-14",
+    from: { x:  900, y: -650, rotate:  40 },
+    to:   { x: -550, y:  480, rotate: -28 },
+    size: "w-14 h-14",
+    loopDuration: 50,
+  },
+  {
+    icon: Clock,
+    className: "left-8 bottom-16 sm:left-16",
+    from: { x: -880, y:  720, rotate: -30 },
+    to:   { x:  520, y: -520, rotate:  26 },
+    size: "w-20 h-20",
+    loopDuration: 54,
+  },
+  {
+    icon: ShieldCheck,
+    className: "right-8 bottom-14 sm:right-16",
+    from: { x:  860, y:  680, rotate:  32 },
+    to:   { x: -500, y: -490, rotate: -24 },
     size: "w-16 h-16",
     loopDuration: 48,
-    drift: [18, 14, 12],
   },
   {
-    // top-right: enters from far top-right corner
-    icon: Zap,
-    className: "right-4 top-20 sm:right-12",
-    xRange: [300, -190],
-    yRange: [-260, 180],
-    rotateRange: [36, -26],
-    size: "w-14 h-14",
-    loopDuration: 52,
-    drift: [16, 12, 10],
-  },
-  {
-    // bottom-left: enters from far bottom-left corner
-    icon: Clock,
-    className: "left-4 bottom-16 sm:left-16",
-    xRange: [-280, 180],
-    yRange: [300, -200],
-    rotateRange: [-28, 30],
-    size: "w-20 h-20",
-    loopDuration: 56,
-    drift: [20, 16, 14],
-  },
-  {
-    // bottom-right: enters from far bottom-right corner
-    icon: ShieldCheck,
-    className: "right-4 bottom-12 sm:right-16",
-    xRange: [260, -180],
-    yRange: [280, -170],
-    rotateRange: [30, -24],
-    size: "w-16 h-16",
-    loopDuration: 50,
-    drift: [16, 14, 12],
-  },
-  {
-    // top-center: enters from far above
     icon: Rocket,
-    className: "left-1/2 -translate-x-1/2 top-2",
-    xRange: [-80, 100],
-    yRange: [-320, 180],
-    rotateRange: [-22, 18],
+    className: "left-1/2 -translate-x-1/2 top-4",
+    from: { x: -120, y: -800, rotate: -20 },
+    to:   { x:  140, y:  600, rotate:  18 },
     size: "w-14 h-14",
-    loopDuration: 60,
-    drift: [14, 10, 8],
+    loopDuration: 58,
   },
 ];
 
@@ -189,30 +115,24 @@ const MetricsSection = () => {
     offset: ["start end", "end start"],
   });
 
-  // Very slow, heavy spring so icons lag far behind scroll
+  // Ultra-slow spring — icons trail far behind scroll, like Jeton
   const slowScroll = useSpring(scrollYProgress, {
-    stiffness: 8,
-    damping: 28,
-    mass: 2.2,
+    stiffness: 5,
+    damping: 32,
+    mass: 3.2,
   });
 
   return (
     <section id="impact" className="py-32 relative overflow-hidden">
-      {/* Subtle gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/30" />
-      <div className="absolute inset-0 pointer-events-none">
-        {floatingIcons.map((item, index) => {
-          return (
-            <FloatingMetricIcon
-              key={`floating-${index}`}
-              item={item}
-              index={index}
-              slowScroll={slowScroll}
-              reduceMotion={reduceMotion}
-            />
-          );
-        })}
-      </div>
+
+      {!reduceMotion && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {floatingIcons.map((item, i) => (
+            <FloatingScrollIcon key={`mf-${i}`} {...item} slowScroll={slowScroll} />
+          ))}
+        </div>
+      )}
       
       <div className="section-container relative" ref={ref}>
         <motion.div
