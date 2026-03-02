@@ -70,6 +70,8 @@ type FloatingIconConfig = {
   yRange: [number, number];
   rotateRange: [number, number];
   size: string;
+  loopDuration: number;
+  drift: [number, number, number];
 };
 
 const FloatingMetricIcon = ({
@@ -84,34 +86,36 @@ const FloatingMetricIcon = ({
   reduceMotion: boolean | null;
 }) => {
   const Icon = item.icon;
-  const x = useTransform(slowScroll, [0, 1], item.xRange);
-  const y = useTransform(slowScroll, [0, 1], item.yRange);
-  const rotate = useTransform(slowScroll, [0, 1], item.rotateRange);
-  const opacity = useTransform(slowScroll, [0, 0.5, 1], [0.2, 0.45, 0.2]);
+  // 3-point: icons arrive from far off (0), settle at center (0.5), then drift back out (1)
+  const x = useTransform(slowScroll, [0, 0.5, 1], [item.xRange[0], 0, item.xRange[1]]);
+  const y = useTransform(slowScroll, [0, 0.5, 1], [item.yRange[0], 0, item.yRange[1]]);
+  const rotate = useTransform(slowScroll, [0, 0.5, 1], [item.rotateRange[0], 0, item.rotateRange[1]]);
+  const opacity = useTransform(slowScroll, [0, 0.35, 0.5, 0.65, 1], [0, 0.55, 0.75, 0.55, 0]);
+  const scale = useTransform(slowScroll, [0, 0.5, 1], [0.6, 1.1, 0.7]);
 
   return (
     <motion.div
       className={`absolute ${item.className}`}
-      style={{ x, y, rotate, opacity }}
+      style={{ x, y, rotate, opacity, scale }}
       animate={
         reduceMotion
           ? undefined
           : {
-              x: [0, 12, -10, 0],
-              y: [0, -10, 8, 0],
+              x: [0, item.drift[0] * 0.4, -item.drift[1] * 0.4, 0],
+              y: [0, -item.drift[1] * 0.4, item.drift[2] * 0.4, 0],
             }
       }
       transition={
         reduceMotion
           ? undefined
           : {
-              duration: 14 + index * 1.8,
+              duration: item.loopDuration * 2 + index * 2,
               ease: "easeInOut",
               repeat: Infinity,
             }
       }
     >
-      <div className={`${item.size} rounded-2xl bg-primary/10 border border-primary/20 backdrop-blur-xl flex items-center justify-center shadow-[0_0_40px_hsl(var(--primary)/0.18)]`}>
+      <div className={`${item.size} rounded-2xl bg-primary/15 border border-primary/30 backdrop-blur-xl flex items-center justify-center shadow-[0_0_55px_hsl(var(--primary)/0.32)]`}>
         <Icon className="w-6 h-6 text-primary/90" />
       </div>
     </motion.div>
@@ -120,60 +124,76 @@ const FloatingMetricIcon = ({
 
 const floatingIcons: FloatingIconConfig[] = [
   {
+    // top-left: enters from far top-left corner
     icon: TrendingUp,
-    className: "left-2 top-10 sm:left-8",
-    xRange: [-90, 70],
-    yRange: [-50, 80],
-    rotateRange: [-18, 14],
-    size: "w-14 h-14",
-  },
-  {
-    icon: Zap,
-    className: "right-2 top-20 sm:right-10",
-    xRange: [80, -60],
-    yRange: [-40, 90],
-    rotateRange: [22, -16],
-    size: "w-12 h-12",
-  },
-  {
-    icon: Clock,
-    className: "left-4 bottom-12 sm:left-14",
-    xRange: [-70, 55],
-    yRange: [70, -45],
-    rotateRange: [-14, 18],
+    className: "left-4 top-16 sm:left-10",
+    xRange: [-320, 200],
+    yRange: [-280, 160],
+    rotateRange: [-32, 22],
     size: "w-16 h-16",
+    loopDuration: 48,
+    drift: [18, 14, 12],
   },
   {
-    icon: ShieldCheck,
-    className: "right-2 bottom-8 sm:right-14",
-    xRange: [70, -50],
-    yRange: [65, -35],
-    rotateRange: [18, -12],
+    // top-right: enters from far top-right corner
+    icon: Zap,
+    className: "right-4 top-20 sm:right-12",
+    xRange: [300, -190],
+    yRange: [-260, 180],
+    rotateRange: [36, -26],
     size: "w-14 h-14",
+    loopDuration: 52,
+    drift: [16, 12, 10],
   },
   {
+    // bottom-left: enters from far bottom-left corner
+    icon: Clock,
+    className: "left-4 bottom-16 sm:left-16",
+    xRange: [-280, 180],
+    yRange: [300, -200],
+    rotateRange: [-28, 30],
+    size: "w-20 h-20",
+    loopDuration: 56,
+    drift: [20, 16, 14],
+  },
+  {
+    // bottom-right: enters from far bottom-right corner
+    icon: ShieldCheck,
+    className: "right-4 bottom-12 sm:right-16",
+    xRange: [260, -180],
+    yRange: [280, -170],
+    rotateRange: [30, -24],
+    size: "w-16 h-16",
+    loopDuration: 50,
+    drift: [16, 14, 12],
+  },
+  {
+    // top-center: enters from far above
     icon: Rocket,
-    className: "left-1/2 -translate-x-1/2 top-0",
-    xRange: [-20, 25],
-    yRange: [-60, 40],
-    rotateRange: [-12, 10],
-    size: "w-12 h-12",
+    className: "left-1/2 -translate-x-1/2 top-2",
+    xRange: [-80, 100],
+    yRange: [-320, 180],
+    rotateRange: [-22, 18],
+    size: "w-14 h-14",
+    loopDuration: 60,
+    drift: [14, 10, 8],
   },
 ];
 
 const MetricsSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: false, margin: "-60px" });
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
+  // Very slow, heavy spring so icons lag far behind scroll
   const slowScroll = useSpring(scrollYProgress, {
-    stiffness: 35,
-    damping: 20,
-    mass: 0.7,
+    stiffness: 8,
+    damping: 28,
+    mass: 2.2,
   });
 
   return (
@@ -224,28 +244,31 @@ const MetricsSection = () => {
               className="bento-card flex flex-col group relative overflow-hidden"
             >
               <motion.div
-                className="absolute -right-2 -top-2 w-24 h-24 rounded-full bg-primary/10 blur-2xl"
+                className="absolute -right-5 -top-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                 animate={
                   reduceMotion
                     ? undefined
                     : {
-                        scale: [1, 1.12, 1],
-                        opacity: [0.35, 0.55, 0.35],
+                        scale: [1, 1.2, 1],
+                        x: [0, -10, 8, 0],
+                        y: [0, 8, -8, 0],
+                        opacity: [0.3, 0.62, 0.3],
                       }
                 }
-                transition={{ duration: 8 + i, repeat: Infinity, ease: "easeInOut" }}
+                transition={{ duration: 16 + i * 1.2, repeat: Infinity, ease: "easeInOut" }}
               />
-              <div className="relative w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/25 group-hover:scale-125 transition-all duration-500">
+              <div className="relative w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center mb-6 group-hover:bg-primary/30 group-hover:scale-[1.35] transition-all duration-700">
                 <motion.div
                   animate={
                     reduceMotion
                       ? undefined
                       : {
-                          rotate: [0, 5, -5, 0],
-                          y: [0, -2, 1, 0],
+                          rotate: [0, 8, -8, 0],
+                          y: [0, -5, 4, 0],
+                          x: [0, 3, -2, 0],
                         }
                   }
-                  transition={{ duration: 7 + i * 0.6, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 12 + i, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <metric.icon className="w-6 h-6 text-primary" />
                 </motion.div>
@@ -279,28 +302,31 @@ const MetricsSection = () => {
                 className="bento-card flex flex-col group relative overflow-hidden"
               >
                 <motion.div
-                  className="absolute -left-2 -bottom-2 w-24 h-24 rounded-full bg-primary/10 blur-2xl"
+                  className="absolute -left-5 -bottom-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                   animate={
                     reduceMotion
                       ? undefined
                       : {
-                          scale: [1, 1.1, 1],
-                          opacity: [0.3, 0.5, 0.3],
+                          scale: [1, 1.2, 1],
+                          x: [0, 8, -8, 0],
+                          y: [0, -8, 8, 0],
+                          opacity: [0.28, 0.58, 0.28],
                         }
                   }
-                  transition={{ duration: 9 + i, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{ duration: 17 + i * 1.2, repeat: Infinity, ease: "easeInOut" }}
                 />
-                <div className="relative w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary/25 group-hover:scale-125 transition-all duration-500">
+                <div className="relative w-12 h-12 rounded-2xl bg-primary/15 flex items-center justify-center mb-6 group-hover:bg-primary/30 group-hover:scale-[1.35] transition-all duration-700">
                   <motion.div
                     animate={
                       reduceMotion
                         ? undefined
                         : {
-                            rotate: [0, -4, 4, 0],
-                            y: [0, -2, 1, 0],
+                            rotate: [0, -8, 8, 0],
+                            y: [0, -5, 4, 0],
+                            x: [0, -3, 2, 0],
                           }
                     }
-                    transition={{ duration: 7.4 + i * 0.6, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 12.5 + i, repeat: Infinity, ease: "easeInOut" }}
                   >
                     <metric.icon className="w-6 h-6 text-primary" />
                   </motion.div>
