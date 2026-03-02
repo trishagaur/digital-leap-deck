@@ -122,11 +122,11 @@
 
   /* Apple-style section titles */
   .section-overline {
-    @apply text-xs font-semibold text-primary tracking-[0.2em] uppercase;
+    @apply block text-xs font-semibold text-primary tracking-[0.2em] uppercase mt-3;
   }
 
   .section-title {
-    @apply text-3xl sm:text-5xl lg:text-6xl font-bold mt-4 text-foreground tracking-tight;
+    @apply text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight;
   }
 }
 

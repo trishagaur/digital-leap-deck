@@ -107,8 +107,8 @@ const MetricsSection = () => {
       
       <div className="section-container relative" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <span className="section-overline">Impact Dashboard</span>
           <h2 className="section-title">Numbers That Speak</h2>
+          <span className="section-overline">Impact Dashboard</span>
         </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -116,9 +116,9 @@ const MetricsSection = () => {
             <FloatingScrollCard
               key={metric.label}
               scrollYProgress={scrollYProgress}
-              direction={i % 2 === 0 ? "left" : "right"}
-              travel={1800}
-              delay={0.04 * i}
+              direction={i === 0 ? "left" : i === 1 ? "bottom" : "right"}
+              travel={800}
+              delay={0.03 * i}
             >
             <div className="bento-card flex flex-col group relative overflow-hidden h-full">
               <motion.div
@@ -168,7 +168,7 @@ const MetricsSection = () => {
                 key={metric.label}
                 scrollYProgress={scrollYProgress}
                 direction={i === 0 ? "left" : "right"}
-                travel={1800}
+                travel={800}
                 delay={0.04 * (i + 3)}
               >
               <div className="bento-card flex flex-col group relative overflow-hidden h-full">

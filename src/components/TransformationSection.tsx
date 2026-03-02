@@ -71,15 +71,15 @@ const TransformationSection = () => {
       )}
       <div className="section-container" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <span className="section-overline">The Transformation</span>
           <h2 className="section-title">
             The Pivot That Changed Everything
           </h2>
+          <span className="section-overline">The Transformation</span>
         </FloatingScrollCard>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Before - flies in very slowly from left */}
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="left" travel={1800} delay={0}>
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="left" travel={800} delay={0}>
             <div className="bento-card relative overflow-hidden group h-full">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive/60 to-destructive/10" />
             <span className="text-xs font-semibold text-destructive tracking-widest uppercase mb-6 block">
@@ -98,7 +98,7 @@ const TransformationSection = () => {
             </div>
           </FloatingScrollCard>
           {/* After - flies in very slowly from right */}
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="right" travel={1800} delay={0.06}>
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="right" travel={800} delay={0.06}>
             <div className="bento-card relative overflow-hidden group h-full">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary/30" />
             <span className="text-xs font-semibold text-primary tracking-widest uppercase mb-6 block">

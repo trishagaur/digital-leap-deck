@@ -89,10 +89,10 @@ const DeliverySection = () => {
 
       <div className="section-container relative" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <span className="section-overline">The Delivery Engine</span>
           <h2 className="section-title">
             How We Built the Impossible
           </h2>
+          <span className="section-overline">The Delivery Engine</span>
           <p className="text-muted-foreground mt-6 max-w-xl mx-auto text-lg">
             Leveraging AI and modern engineering to achieve in one year what typically takes three.
           </p>
@@ -105,7 +105,7 @@ const DeliverySection = () => {
               scrollYProgress={scrollYProgress}
               direction={i % 2 === 0 ? "left" : "right"}
               travel={1800}
-              delay={0.05 * i}
+              delay={0.04 * i}
             >
               <div className="bento-card flex items-start gap-6 group">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">

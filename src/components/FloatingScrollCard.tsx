@@ -4,20 +4,21 @@
  * Wraps any card content so it slides in from the edge of the viewport
  * as the section scrolls into view — driven by raw scrollYProgress.
  *
- * Scroll path (4 keyframes — mirrors FloatingScrollIcon):
- *   0    → 0.20  : card travels from off-screen edge to settled position
- *   0.20 → 0.80  : card rests in place (users reads the content)
- *   0.80 → 1     : card travels back off-screen as section leaves view
+ * Timing (with offset: ["start end", "end start"]):
+ *   • Cards stay hidden until the section is ~30 % scrolled into view
+ *     (i.e. approaching the viewport centre — "waiting for the section")
+ *   • Entry spans 26 % of the scroll range → slow, deliberate glide
+ *   • Hold zone 0.56 → 0.68 (card fully visible while section is centred)
+ *   • Exit spans 0.68 → 0.86
  *
- * "from" direction options:
- *   left  — enters from the left edge  (x: -vw, y: 0)
- *   right — enters from the right edge (x: +vw, y: 0)
- *   bottom — enters from the bottom    (x: 0,  y: +vh)
+ * Travel distance (default 800 px):
+ *   Enough to start just off-screen, so the ENTIRE animation is visible
+ *   to the reader — unlike 1 800 px where most movement is off-screen
+ *   and makes the visible portion feel fast/abrupt.
  *
- * Speed feel is controlled purely by the travel distance — because the
- * card moves that many pixels across the full 0→0.20 range of scroll,
- * increasing the distance makes it feel *slower* (more px per 1% scroll).
- * Default travel: 1 800 px so cards crawl on-screen over a long scroll.
+ * Direction: left | right | bottom
+ *   Cards from the same row use left / bottom / right so they never
+ *   need to cross each other's paths.
  */
 import { type MotionValue, motion, useTransform } from "framer-motion";
 import { type ReactNode } from "react";
@@ -29,56 +30,58 @@ interface FloatingScrollCardProps {
   scrollYProgress: MotionValue<number>;
   /** Which edge the card enters from */
   direction?: Direction;
-  /** How many px the card travels — bigger = slower apparent movement */
+  /** How many px the card travels. Default 800 — fully visible glide. */
   travel?: number;
   /** Extra Tailwind / style classes for the wrapper */
   className?: string;
-  /** Stagger delay in seconds (0 → no delay) */
+  /** Stagger offset added to entryStart (capped at 0.10). */
   delay?: number;
 }
 
-const directionDefaults: Record<Direction, { fromX: number; fromY: number; toX: number; toY: number }> = {
-  left:   { fromX: -1800, fromY:   0, toX:  1800, toY:    0 },
-  right:  { fromX:  1800, fromY:   0, toX: -1800, toY:    0 },
-  bottom: { fromX:     0, fromY: 1800, toX:     0, toY: -1800 },
+// Unit direction vectors: [fromX, fromY, toX, toY]
+const DIR: Record<Direction, [number, number, number, number]> = {
+  left:   [-1,  0,  1,  0],
+  right:  [ 1,  0, -1,  0],
+  bottom: [ 0,  1,  0, -1],
 };
 
 export const FloatingScrollCard = ({
   children,
   scrollYProgress,
   direction = "left",
-  travel,
+  travel = 800,
   className = "",
   delay = 0,
 }: FloatingScrollCardProps) => {
-  const defaults = directionDefaults[direction];
-  const scale = travel ? travel / 1800 : 1;
+  const [fdx, fdy, tdx, tdy] = DIR[direction];
+  const fromX = fdx * travel;
+  const fromY = fdy * travel;
+  const toX   = tdx * travel;
+  const toY   = tdy * travel;
 
-  const fromX = defaults.fromX * scale;
-  const fromY = defaults.fromY * scale;
-  const toX   = defaults.toX   * scale;
-  const toY   = defaults.toY   * scale;
+  // Cards wait until section is ~30% scrolled in (near centre) then glide in
+  // over 26% of the scroll range — the wider the window, the slower the feel.
+  const d          = Math.min(delay, 0.10);
+  const entryStart = 0.30 + d;
+  const entryEnd   = entryStart + 0.26;   // max ~0.56
+  const exitStart  = 0.68;
+  const exitEnd    = 0.86;
 
-  // With delay: shift the entry window forward so staggered cards each enter a
-  // little later in the scroll range (0.04 per card feels like a natural cascade).
-  const entryStart  = Math.min(0.02 + delay, 0.20);
-  const entryEnd    = Math.min(entryStart + 0.20, 0.45);
-  const exitStart   = 0.72;
-  const exitEnd     = 0.92;
-
+  // Card stays at full offset until entryStart, then slides directly to 0
   const x = useTransform(
     scrollYProgress,
     [0, entryStart, entryEnd, exitStart, exitEnd, 1],
-    [fromX, fromX * 0.6, 0, 0, toX * 0.6, toX],
+    [fromX, fromX, 0, 0, toX, toX],
   );
   const y = useTransform(
     scrollYProgress,
     [0, entryStart, entryEnd, exitStart, exitEnd, 1],
-    [fromY, fromY * 0.6, 0, 0, toY * 0.6, toY],
+    [fromY, fromY, 0, 0, toY, toY],
   );
+  // Fade-in starts halfway through entry so translate + opacity arrive together
   const opacity = useTransform(
     scrollYProgress,
-    [0, entryStart, entryEnd, exitStart, exitEnd, 1],
+    [0, entryStart, Math.min(entryStart + 0.14, entryEnd), exitStart, exitEnd, 1],
     [0, 0, 1, 1, 0, 0],
   );
 

@@ -4,6 +4,7 @@ import TransformationSection from "@/components/TransformationSection";
 import MetricsSection from "@/components/MetricsSection";
 import DeliverySection from "@/components/DeliverySection";
 import CultureSection from "@/components/CultureSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
       <MetricsSection />
       <DeliverySection />
       <CultureSection />
+      <TestimonialsSection />
     </div>
   );
 };

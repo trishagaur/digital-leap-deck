@@ -77,8 +77,8 @@ const CultureSection = () => {
       )}
       <div className="section-container" ref={ref}>
         <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <span className="section-overline">Why We Win</span>
           <h2 className="section-title">Culture Is Our Superpower</h2>
+          <span className="section-overline">Why We Win</span>
         </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -86,9 +86,9 @@ const CultureSection = () => {
             <FloatingScrollCard
               key={item.title}
               scrollYProgress={scrollYProgress}
-              direction={i === 0 ? "left" : i === 2 ? "right" : "bottom"}
-              travel={1800}
-              delay={0.05 * i}
+              direction={i === 0 ? "left" : i === 1 ? "bottom" : "right"}
+              travel={800}
+              delay={0.03 * i}
             >
               <div className="bento-card text-center group h-full">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
