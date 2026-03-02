@@ -72,7 +72,7 @@ const DeliverySection = () => {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
 
   return (
-    <section id="innovation" className="min-h-[150vh] py-20 relative overflow-hidden">
+    <section id="innovation" className="min-h-[130vh] py-20 relative overflow-hidden">
       {/* Parallax background accent */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent"
@@ -88,17 +88,15 @@ const DeliverySection = () => {
       )}
 
       <div className="section-container relative" ref={ref}>
-        <div className="sticky top-20 z-10 pb-12">
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
-            <h2 className="section-title">
-              How We Built the Impossible
-            </h2>
-            <span className="section-overline">The Delivery Engine</span>
-            <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-lg">
-              Leveraging AI and modern engineering to achieve in one year what typically takes three.
-            </p>
-          </FloatingScrollCard>
-        </div>
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <h2 className="section-title">
+            How We Built the Impossible
+          </h2>
+          <span className="section-overline">The Delivery Engine</span>
+          <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-lg">
+            Leveraging AI and modern engineering to achieve in one year what typically takes three.
+          </p>
+        </FloatingScrollCard>
 
         <div className="space-y-8 max-w-4xl mx-auto">
           {deliveryItems.map((item, i) => (

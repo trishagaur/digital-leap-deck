@@ -94,7 +94,7 @@ const MetricsSection = () => {
   });
 
   return (
-    <section id="impact" className="min-h-[150vh] py-20 relative overflow-hidden">
+    <section id="impact" className="min-h-[130vh] py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/30" />
 
       {!reduceMotion && (
@@ -106,13 +106,10 @@ const MetricsSection = () => {
       )}
       
       <div className="section-container relative" ref={ref}>
-        {/* Sticky header pins at top while cards scroll in below */}
-        <div className="sticky top-20 z-10 pb-12">
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
-            <h2 className="section-title">Numbers That Speak</h2>
-            <span className="section-overline">Impact Dashboard</span>
-          </FloatingScrollCard>
-        </div>
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <h2 className="section-title">Numbers That Speak</h2>
+          <span className="section-overline">Impact Dashboard</span>
+        </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {metrics.slice(0, 3).map((metric, i) => (

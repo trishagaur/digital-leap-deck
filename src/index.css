@@ -126,7 +126,7 @@
   }
 
   .section-title {
-    @apply text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight;
+    @apply text-4xl sm:text-6xl lg:text-7xl font-extrabold text-foreground tracking-tighter;
   }
 }
 

@@ -61,7 +61,7 @@ const TransformationSection = () => {
   ];
 
   return (
-    <section id="mission" className="min-h-[140vh] py-20 relative overflow-hidden">
+    <section id="mission" className="min-h-[120vh] py-20 relative overflow-hidden">
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
@@ -70,14 +70,12 @@ const TransformationSection = () => {
         </div>
       )}
       <div className="section-container" ref={ref}>
-        <div className="sticky top-20 z-10 pb-12">
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
-            <h2 className="section-title">
-              The Pivot That Changed Everything
-            </h2>
-            <span className="section-overline">The Transformation</span>
-          </FloatingScrollCard>
-        </div>
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <h2 className="section-title">
+            The Pivot That Changed Everything
+          </h2>
+          <span className="section-overline">The Transformation</span>
+        </FloatingScrollCard>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Before - flies in very slowly from left */}

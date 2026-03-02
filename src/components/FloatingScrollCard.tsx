@@ -50,12 +50,14 @@ export const FloatingScrollCard = ({
   const toX   = tdx * travel;
   const toY   = tdy * travel;
 
-  // stagger=0 → header (entryStart 0.18), stagger=1 → first card (0.26), etc.
-  // Each stagger step adds 0.06 so cards cascade in one-by-one, slowly.
-  const entryStart = 0.18 + stagger * 0.06;
-  const entryEnd   = entryStart + 0.28;          // 28 % window = slow glide
-  const exitStart  = 0.72;
-  const exitEnd    = 0.88;
+  // stagger=0 → header (entryStart 0.22), stagger=1 → 0.26, stagger=5 → 0.42.
+  // 0.04 step keeps the cascade tight so all cards are settled well before exit.
+  // exitStart=0.82 gives a generous dwell window — even with 5 cards (settled at 0.68)
+  // the header won't start leaving until 0.82, a 14% rest where everything is on-screen.
+  const entryStart = 0.22 + stagger * 0.04;
+  const entryEnd   = entryStart + 0.26;          // 26 % window = slow graceful glide
+  const exitStart  = 0.82;
+  const exitEnd    = 0.95;
 
   const x = useTransform(
     scrollYProgress,

@@ -67,7 +67,7 @@ const CultureSection = () => {
   });
 
   return (
-    <section id="culture" className="min-h-[140vh] py-20 relative overflow-hidden">
+    <section id="culture" className="min-h-[120vh] py-20 relative overflow-hidden">
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
@@ -76,12 +76,10 @@ const CultureSection = () => {
         </div>
       )}
       <div className="section-container" ref={ref}>
-        <div className="sticky top-20 z-10 pb-12">
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
-            <h2 className="section-title">Culture Is Our Superpower</h2>
-            <span className="section-overline">Why We Win</span>
-          </FloatingScrollCard>
-        </div>
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center mb-12">
+          <h2 className="section-title">Culture Is Our Superpower</h2>
+          <span className="section-overline">Why We Win</span>
+        </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {cultureItems.map((item, i) => (
