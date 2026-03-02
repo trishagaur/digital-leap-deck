@@ -94,7 +94,7 @@ const MetricsSection = () => {
   });
 
   return (
-    <section id="impact" className="py-32 relative overflow-hidden">
+    <section id="impact" className="min-h-[150vh] py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/30" />
 
       {!reduceMotion && (
@@ -106,10 +106,13 @@ const MetricsSection = () => {
       )}
       
       <div className="section-container relative" ref={ref}>
-        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <h2 className="section-title">Numbers That Speak</h2>
-          <span className="section-overline">Impact Dashboard</span>
-        </FloatingScrollCard>
+        {/* Sticky header pins at top while cards scroll in below */}
+        <div className="sticky top-20 z-10 pb-12">
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
+            <h2 className="section-title">Numbers That Speak</h2>
+            <span className="section-overline">Impact Dashboard</span>
+          </FloatingScrollCard>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {metrics.slice(0, 3).map((metric, i) => (
@@ -117,8 +120,8 @@ const MetricsSection = () => {
               key={metric.label}
               scrollYProgress={scrollYProgress}
               direction={i === 0 ? "left" : i === 1 ? "bottom" : "right"}
-              travel={800}
-              delay={0.03 * i}
+              travel={700}
+              stagger={i + 1}
             >
             <div className="bento-card flex flex-col group relative overflow-hidden h-full">
               <motion.div
@@ -168,8 +171,8 @@ const MetricsSection = () => {
                 key={metric.label}
                 scrollYProgress={scrollYProgress}
                 direction={i === 0 ? "left" : "right"}
-                travel={800}
-                delay={0.04 * (i + 3)}
+                travel={700}
+                stagger={i + 4}
               >
               <div className="bento-card flex flex-col group relative overflow-hidden h-full">
                 <motion.div

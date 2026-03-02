@@ -61,7 +61,7 @@ const TransformationSection = () => {
   ];
 
   return (
-    <section id="mission" className="py-32 relative overflow-hidden">
+    <section id="mission" className="min-h-[140vh] py-20 relative overflow-hidden">
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
@@ -70,16 +70,18 @@ const TransformationSection = () => {
         </div>
       )}
       <div className="section-container" ref={ref}>
-        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <h2 className="section-title">
-            The Pivot That Changed Everything
-          </h2>
-          <span className="section-overline">The Transformation</span>
-        </FloatingScrollCard>
+        <div className="sticky top-20 z-10 pb-12">
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
+            <h2 className="section-title">
+              The Pivot That Changed Everything
+            </h2>
+            <span className="section-overline">The Transformation</span>
+          </FloatingScrollCard>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Before - flies in very slowly from left */}
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="left" travel={800} delay={0}>
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="left" travel={700} stagger={1}>
             <div className="bento-card relative overflow-hidden group h-full">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-destructive/60 to-destructive/10" />
             <span className="text-xs font-semibold text-destructive tracking-widest uppercase mb-6 block">
@@ -98,7 +100,7 @@ const TransformationSection = () => {
             </div>
           </FloatingScrollCard>
           {/* After - flies in very slowly from right */}
-          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="right" travel={800} delay={0.06}>
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="right" travel={700} stagger={2}>
             <div className="bento-card relative overflow-hidden group h-full">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary/30" />
             <span className="text-xs font-semibold text-primary tracking-widest uppercase mb-6 block">

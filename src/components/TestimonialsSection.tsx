@@ -1,12 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useReducedMotion,
-} from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useInView } from "framer-motion";
 import { Quote } from "lucide-react";
-import { FloatingScrollCard } from "./FloatingScrollCard";
 
 const testimonials = [
   {
@@ -61,25 +55,20 @@ const testimonials = [
   },
 ];
 
-const AUTOPLAY_INTERVAL = 5500;
+const AUTOPLAY_INTERVAL = 10000;
 
 const TestimonialsSection = () => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: false, margin: "-80px" });
   const [activeId, setActiveId] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [slideDir, setSlideDir] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const reduceMotion = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  // Auto-advance through testimonials
   useEffect(() => {
     if (isPaused || reduceMotion) return;
     const timer = setInterval(() => {
-      setDirection(1);
+      setSlideDir(1);
       setActiveId((prev) => (prev + 1) % testimonials.length);
     }, AUTOPLAY_INTERVAL);
     return () => clearInterval(timer);
@@ -87,134 +76,109 @@ const TestimonialsSection = () => {
 
   const handleSelect = (id: number) => {
     setIsPaused(true);
-    setDirection(id > activeId ? 1 : -1);
+    setSlideDir(id > activeId ? 1 : -1);
     setActiveId(id);
-    // Resume auto-advance after user interaction
     setTimeout(() => setIsPaused(false), AUTOPLAY_INTERVAL * 2);
   };
 
   const active = testimonials[activeId];
 
   const cardVariants = {
-    enter: (dir: number) => ({
-      x: dir * 80,
-      opacity: 0,
-      scale: 0.97,
-      rotate: dir * 1.5,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      rotate: -1,
-    },
-    exit: (dir: number) => ({
-      x: -dir * 80,
-      opacity: 0,
-      scale: 0.97,
-      rotate: -dir * 1.5,
-    }),
+    enter: (d: number) => ({ y: d * 36, opacity: 0, scale: 0.98 }),
+    center: { y: 0, opacity: 1, scale: 1 },
+    exit: (d: number) => ({ y: -d * 36, opacity: 0, scale: 0.98 }),
   };
 
   return (
-    <section id="testimonials" className="py-32 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-secondary/30 via-transparent to-secondary/20" />
+    <section id="testimonials" className="py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-secondary/40 via-transparent to-secondary/20" />
 
       <div className="section-container relative" ref={ref}>
-        {/* Section header */}
-        <FloatingScrollCard
-          scrollYProgress={scrollYProgress}
-          direction="bottom"
-          travel={700}
-          className="text-center mb-20"
+        {/* Section header — fades in on scroll */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-16"
         >
-          <h2 className="section-title">What people say</h2>
-          <span className="section-overline">Voices that matter</span>
-        </FloatingScrollCard>
+          <span className="text-xs font-semibold text-primary tracking-[0.2em] uppercase">
+            What people say
+          </span>
+          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight mt-3">
+            Loved by those who matter
+          </h2>
+        </motion.div>
 
-        {/* Main layout: featured card + sidebar list */}
-        <div className="flex flex-col lg:flex-row items-center gap-14 max-w-6xl mx-auto">
+        {/* Two-column layout: large card left, name list right */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10 max-w-6xl mx-auto items-start">
 
-          {/* ── Left: stacked card deck ── */}
-          <FloatingScrollCard
-            scrollYProgress={scrollYProgress}
-            direction="left"
-            travel={700}
-            delay={0.04}
-            className="relative w-full lg:w-[58%] flex-shrink-0"
+          {/* LEFT: stacked card deck */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
           >
-            <div
-              className="relative h-[400px]"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
-            >
-              {/* Ghost cards — stacked deck behind main card */}
+            <div className="relative">
+              {/* Ghost deck: two rotated cards behind active */}
               <div
-                className="absolute w-full glass-panel rounded-3xl h-[330px]"
+                className="absolute inset-0 glass-panel rounded-3xl pointer-events-none"
                 style={{
-                  transform: "rotate(4deg) translateY(20px) translateX(20px)",
-                  opacity: 0.25,
+                  transform: "rotate(3deg) translateY(14px) translateX(14px)",
+                  opacity: 0.28,
                 }}
               />
               <div
-                className="absolute w-full glass-panel rounded-3xl h-[330px]"
+                className="absolute inset-0 glass-panel rounded-3xl pointer-events-none"
                 style={{
-                  transform: "rotate(2deg) translateY(10px) translateX(10px)",
-                  opacity: 0.50,
+                  transform: "rotate(1.5deg) translateY(7px) translateX(7px)",
+                  opacity: 0.52,
                 }}
               />
 
-              {/* Featured testimonial card */}
-              <AnimatePresence mode="wait" custom={direction}>
+              {/* Active testimonial — slides up/down on change */}
+              <AnimatePresence mode="wait" custom={slideDir}>
                 <motion.div
                   key={activeId}
-                  custom={direction}
+                  custom={slideDir}
                   variants={reduceMotion ? {} : cardVariants}
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute w-full glass-panel rounded-3xl p-8 shadow-[0_24px_80px_hsl(var(--primary)/0.08)]"
-                  style={{ transformOrigin: "center bottom" }}
+                  transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                  className="relative glass-panel rounded-3xl p-10 shadow-[0_24px_80px_hsl(var(--primary)/0.07)]"
                 >
-                  {/* Large quote mark */}
-                  <div className="mb-5">
-                    <Quote className="w-8 h-8 text-primary/30" />
-                  </div>
+                  <Quote className="w-10 h-10 text-primary/20 mb-6" />
 
-                  {/* Quote text */}
-                  <p className="text-base sm:text-[1.05rem] text-foreground leading-relaxed mb-8 font-medium min-h-[96px]">
-                    "{active.quote}"
+                  <p className="text-lg sm:text-xl text-foreground leading-relaxed mb-10 font-medium">
+                    &ldquo;{active.quote}&rdquo;
                   </p>
 
-                  {/* Author row */}
-                  <div className="flex items-center gap-4">
-                    {/* Avatar */}
+                  {/* Author row + progress dots */}
+                  <div className="flex items-center gap-4 flex-wrap">
                     <div
-                      className={`w-11 h-11 rounded-full bg-gradient-to-br ${active.gradient} flex items-center justify-center text-white font-semibold text-sm flex-shrink-0 shadow-lg`}
+                      className={`w-12 h-12 rounded-full bg-gradient-to-br ${active.gradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 shadow-md`}
                     >
                       {active.initials}
                     </div>
-                    <div>
-                      <p className="font-semibold text-foreground text-sm">
-                        {active.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
+                    <div className="min-w-0">
+                      <p className="font-semibold text-foreground">{active.name}</p>
+                      <p className="text-sm text-muted-foreground">
                         {active.role}&nbsp;&middot;&nbsp;
                         <span className="font-medium">{active.company}</span>
                       </p>
                     </div>
-
-                    {/* Progress dots */}
-                    <div className="ml-auto flex items-center gap-2">
+                    <div className="ml-auto flex items-center gap-2 flex-shrink-0">
                       {testimonials.map((t) => (
                         <button
                           key={t.id}
                           onClick={() => handleSelect(t.id)}
+                          aria-label={`View ${t.name}`}
                           className={`rounded-full transition-all duration-300 ${
                             t.id === activeId
-                              ? "w-5 h-1.5 bg-primary"
-                              : "w-1.5 h-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/60"
+                              ? "w-6 h-2 bg-primary"
+                              : "w-2 h-2 bg-muted-foreground/25 hover:bg-muted-foreground/50"
                           }`}
                         />
                       ))}
@@ -223,71 +187,64 @@ const TestimonialsSection = () => {
                 </motion.div>
               </AnimatePresence>
             </div>
-          </FloatingScrollCard>
+          </motion.div>
 
-          {/* ── Right: testimonials list ── */}
-          <FloatingScrollCard
-            scrollYProgress={scrollYProgress}
-            direction="right"
-            travel={700}
-            delay={0.07}
-            className="w-full lg:w-[42%]"
+          {/* RIGHT: selectable name list */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="mb-6">
-              <p className="text-xs font-semibold text-muted-foreground tracking-[0.18em] uppercase mb-1">
+            <div className="mb-5">
+              <p className="text-xs font-semibold text-muted-foreground tracking-[0.18em] uppercase mb-0.5">
                 Testimonials
               </p>
               <p className="text-sm text-muted-foreground">
-                People who've seen it first-hand
+                People who have seen it first-hand
               </p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               {testimonials.map((t) => (
                 <motion.button
                   key={t.id}
                   onClick={() => handleSelect(t.id)}
-                  whileHover={reduceMotion ? undefined : { x: 5 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all duration-300 cursor-pointer ${
+                  whileHover={reduceMotion ? undefined : { x: 4 }}
+                  transition={{ type: "spring", stiffness: 280, damping: 24 }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all duration-200 ${
                     t.id === activeId
                       ? "bg-primary/10 border border-primary/20 shadow-sm"
-                      : "border border-transparent hover:bg-secondary"
+                      : "border border-transparent hover:bg-secondary/80"
                   }`}
                 >
-                  {/* Avatar */}
                   <div
                     className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.gradient} flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 shadow-sm`}
                   >
                     {t.initials}
                   </div>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p
-                      className={`text-sm font-medium truncate ${
-                        t.id === activeId
-                          ? "text-foreground"
-                          : "text-secondary-foreground"
+                      className={`text-sm font-semibold leading-snug ${
+                        t.id === activeId ? "text-primary" : "text-foreground"
                       }`}
                     >
                       {t.name}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {t.role}&nbsp;&middot;&nbsp;
-                      <span className="font-medium">{t.company}</span>
+                    <p className="text-xs text-muted-foreground leading-snug">{t.role}</p>
+                    <p className="text-xs text-muted-foreground font-medium leading-snug">
+                      {t.company}
                     </p>
                   </div>
-
-                  {/* Active indicator dot */}
                   {t.id === activeId && (
                     <motion.div
                       layoutId="active-dot"
-                      className="ml-auto w-2 h-2 rounded-full bg-primary flex-shrink-0"
+                      className="w-2 h-2 rounded-full bg-primary flex-shrink-0"
                     />
                   )}
                 </motion.button>
               ))}
             </div>
-          </FloatingScrollCard>
+          </motion.div>
         </div>
       </div>
     </section>

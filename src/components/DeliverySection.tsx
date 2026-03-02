@@ -72,7 +72,7 @@ const DeliverySection = () => {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
 
   return (
-    <section id="innovation" className="py-32 relative overflow-hidden">
+    <section id="innovation" className="min-h-[150vh] py-20 relative overflow-hidden">
       {/* Parallax background accent */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent"
@@ -88,15 +88,17 @@ const DeliverySection = () => {
       )}
 
       <div className="section-container relative" ref={ref}>
-        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <h2 className="section-title">
-            How We Built the Impossible
-          </h2>
-          <span className="section-overline">The Delivery Engine</span>
-          <p className="text-muted-foreground mt-6 max-w-xl mx-auto text-lg">
-            Leveraging AI and modern engineering to achieve in one year what typically takes three.
-          </p>
-        </FloatingScrollCard>
+        <div className="sticky top-20 z-10 pb-12">
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
+            <h2 className="section-title">
+              How We Built the Impossible
+            </h2>
+            <span className="section-overline">The Delivery Engine</span>
+            <p className="text-muted-foreground mt-4 max-w-xl mx-auto text-lg">
+              Leveraging AI and modern engineering to achieve in one year what typically takes three.
+            </p>
+          </FloatingScrollCard>
+        </div>
 
         <div className="space-y-8 max-w-4xl mx-auto">
           {deliveryItems.map((item, i) => (
@@ -104,8 +106,8 @@ const DeliverySection = () => {
               key={item.title}
               scrollYProgress={scrollYProgress}
               direction={i % 2 === 0 ? "left" : "right"}
-              travel={1800}
-              delay={0.04 * i}
+              travel={700}
+              stagger={i + 1}
             >
               <div className="bento-card flex items-start gap-6 group">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">

@@ -67,7 +67,7 @@ const CultureSection = () => {
   });
 
   return (
-    <section id="culture" className="py-32 relative overflow-hidden">
+    <section id="culture" className="min-h-[140vh] py-20 relative overflow-hidden">
       {!reduceMotion && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {floatingIcons.map((item, i) => (
@@ -76,10 +76,12 @@ const CultureSection = () => {
         </div>
       )}
       <div className="section-container" ref={ref}>
-        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
-          <h2 className="section-title">Culture Is Our Superpower</h2>
-          <span className="section-overline">Why We Win</span>
-        </FloatingScrollCard>
+        <div className="sticky top-20 z-10 pb-12">
+          <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={500} stagger={0} className="text-center">
+            <h2 className="section-title">Culture Is Our Superpower</h2>
+            <span className="section-overline">Why We Win</span>
+          </FloatingScrollCard>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {cultureItems.map((item, i) => (
@@ -87,8 +89,8 @@ const CultureSection = () => {
               key={item.title}
               scrollYProgress={scrollYProgress}
               direction={i === 0 ? "left" : i === 1 ? "bottom" : "right"}
-              travel={800}
-              delay={0.03 * i}
+              travel={700}
+              stagger={i + 1}
             >
               <div className="bento-card text-center group h-full">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
@@ -106,7 +108,7 @@ const CultureSection = () => {
         </div>
 
         {/* Footer */}
-        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={600} delay={0.12} className="mt-24 text-center">
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={400} stagger={4} className="mt-16 text-center">
           <div className="inline-block px-8 py-4 rounded-full border border-border bg-secondary/50 hover:bg-secondary transition-colors duration-300">
             <span className="text-sm text-muted-foreground">
               Built with conviction. Delivered with excellence.{" "}
