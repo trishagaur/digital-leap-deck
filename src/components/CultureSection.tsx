@@ -86,12 +86,6 @@ const CultureSection = () => {
     offset: ["start end", "end start"],
   });
 
-  const slowScroll = useSpring(scrollYProgress, {
-    stiffness: 5,
-    damping: 32,
-    mass: 3.2,
-  });
-
   return (
     <section id="culture" className="py-32 relative overflow-hidden">
       {!reduceMotion && (
