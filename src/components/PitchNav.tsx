@@ -43,7 +43,7 @@ const PitchNav = () => {
       <div className="section-container h-full flex items-center justify-center">
         {/* Logo - absolute left */}
         <a href="#hero" className="absolute left-6 lg:left-8 text-sm font-semibold text-foreground tracking-wide">
-          TEAM OF THE YEAR
+          GPS- Retirement Capability
         </a>
 
         {/* Center-aligned nav */}
