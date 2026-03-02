@@ -1,7 +1,8 @@
-import { motion, useInView, useReducedMotion, useScroll } from "framer-motion";
+import { motion, useReducedMotion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { Heart, MessageCircle, Award, Star, Users } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
+import { FloatingScrollCard } from "./FloatingScrollCard";
 
 const cultureItems = [
   {
@@ -28,7 +29,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1560, y: -1060, rotate: -34 },
     to:   { x:  1160, y:   880, rotate:  22 },
     size: "w-16 h-16",
-    loopDuration: 38,
+    loopDuration: 68,
   },
   {
     icon: Star,
@@ -36,7 +37,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1500, y: -1000, rotate:  38 },
     to:   { x: -1100, y:   840, rotate: -26 },
     size: "w-12 h-12",
-    loopDuration: 42,
+    loopDuration: 74,
   },
   {
     icon: Users,
@@ -44,7 +45,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1460, y:  1160, rotate: -30 },
     to:   { x:  1060, y:  -960, rotate:  24 },
     size: "w-16 h-16",
-    loopDuration: 44,
+    loopDuration: 80,
   },
   {
     icon: Award,
@@ -52,33 +53,12 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1400, y:  1100, rotate:  32 },
     to:   { x: -1000, y:  -900, rotate: -22 },
     size: "w-14 h-14",
-    loopDuration: 40,
+    loopDuration: 72,
   },
 ];
 
-const cardVariants = {
-  hidden: (i: number) => ({
-    opacity: 0,
-    y: 60,
-    x: (i - 1) * -80,
-    scale: 0.9,
-  }),
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    x: 0,
-    scale: 1,
-    transition: {
-      duration: 0.8,
-      delay: 0.15 * i,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
-
 const CultureSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-80px" });
   const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -96,53 +76,44 @@ const CultureSection = () => {
         </div>
       )}
       <div className="section-container" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
-        >
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
           <span className="section-overline">Why We Win</span>
           <h2 className="section-title">Culture Is Our Superpower</h2>
-        </motion.div>
+        </FloatingScrollCard>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {cultureItems.map((item, i) => (
-            <motion.div
+            <FloatingScrollCard
               key={item.title}
-              custom={i}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              variants={cardVariants}
-              className="bento-card text-center group"
+              scrollYProgress={scrollYProgress}
+              direction={i === 0 ? "left" : i === 2 ? "right" : "bottom"}
+              travel={1800}
+              delay={0.05 * i}
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                <item.icon className="w-7 h-7 text-primary" />
+              <div className="bento-card text-center group h-full">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                  <item.icon className="w-7 h-7 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground mb-3 tracking-tight">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="text-lg font-semibold text-foreground mb-3 tracking-tight">
-                {item.title}
-              </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {item.description}
-              </p>
-            </motion.div>
+            </FloatingScrollCard>
           ))}
         </div>
 
         {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-24 text-center"
-        >
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={600} delay={0.12} className="mt-24 text-center">
           <div className="inline-block px-8 py-4 rounded-full border border-border bg-secondary/50 hover:bg-secondary transition-colors duration-300">
             <span className="text-sm text-muted-foreground">
               Built with conviction. Delivered with excellence.{" "}
               <span className="gradient-text font-semibold">Team of the Year 2025.</span>
             </span>
           </div>
-        </motion.div>
+        </FloatingScrollCard>
       </div>
     </section>
   );

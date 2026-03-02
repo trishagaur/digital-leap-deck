@@ -1,7 +1,8 @@
-import { motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Bot, GitBranch, ToggleRight, Code, Cpu, Layers } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
+import { FloatingScrollCard } from "./FloatingScrollCard";
 
 const deliveryItems = [
   {
@@ -31,7 +32,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1580, y: -1080, rotate: -38 },
     to:   { x:  1180, y:   900, rotate:  24 },
     size: "w-16 h-16",
-    loopDuration: 38,
+    loopDuration: 68,
   },
   {
     icon: Code,
@@ -39,7 +40,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1520, y: -1020, rotate:  42 },
     to:   { x: -1120, y:   860, rotate: -28 },
     size: "w-14 h-14",
-    loopDuration: 42,
+    loopDuration: 74,
   },
   {
     icon: Layers,
@@ -47,7 +48,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1480, y:  1180, rotate: -34 },
     to:   { x:  1080, y:  -980, rotate:  28 },
     size: "w-20 h-20",
-    loopDuration: 44,
+    loopDuration: 80,
   },
   {
     icon: Cpu,
@@ -55,13 +56,12 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1420, y:  1120, rotate:  36 },
     to:   { x: -1020, y:  -920, rotate: -26 },
     size: "w-14 h-14",
-    loopDuration: 40,
+    loopDuration: 72,
   },
 ];
 
 const DeliverySection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-80px" });
   const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -88,12 +88,7 @@ const DeliverySection = () => {
       )}
 
       <div className="section-container relative" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
-        >
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
           <span className="section-overline">The Delivery Engine</span>
           <h2 className="section-title">
             How We Built the Impossible
@@ -101,29 +96,31 @@ const DeliverySection = () => {
           <p className="text-muted-foreground mt-6 max-w-xl mx-auto text-lg">
             Leveraging AI and modern engineering to achieve in one year what typically takes three.
           </p>
-        </motion.div>
+        </FloatingScrollCard>
 
         <div className="space-y-8 max-w-4xl mx-auto">
           {deliveryItems.map((item, i) => (
-            <motion.div
+            <FloatingScrollCard
               key={item.title}
-              initial={{ opacity: 0, x: i % 2 === 0 ? -100 : 100, y: 20 }}
-              animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 * i, ease: [0.22, 1, 0.36, 1] }}
-              className="bento-card flex items-start gap-6 group"
+              scrollYProgress={scrollYProgress}
+              direction={i % 2 === 0 ? "left" : "right"}
+              travel={1800}
+              delay={0.05 * i}
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
-                <item.icon className="w-7 h-7 text-primary" />
+              <div className="bento-card flex items-start gap-6 group">
+                <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
+                  <item.icon className="w-7 h-7 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground mb-2 tracking-tight">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground mb-2 tracking-tight">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
-            </motion.div>
+            </FloatingScrollCard>
           ))}
         </div>
       </div>

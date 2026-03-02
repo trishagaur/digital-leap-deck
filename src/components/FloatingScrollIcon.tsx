@@ -26,7 +26,7 @@ export type FloatingIconDef = {
   to: { x: number; y: number; rotate: number };
   /** Tailwind size classes, e.g. "w-16 h-16" */
   size?: string;
-  /** Idle drift loop duration in seconds */
+  /** Idle drift loop duration in seconds — keep 60+ for a barely-there float */
   loopDuration?: number;
 };
 
@@ -37,7 +37,7 @@ export const FloatingScrollIcon = ({
   to,
   scrollYProgress,        // raw, NO spring — spring kills travel distance
   size = "w-16 h-16",
-  loopDuration = 38,
+  loopDuration = 65,
 }: FloatingIconDef & { scrollYProgress: MotionValue<number> }) => {
 
   // Enter 0→0.38, hold 0.38→0.62, exit 0.62→1
@@ -49,7 +49,7 @@ export const FloatingScrollIcon = ({
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.10, 0.32, 0.68, 0.90, 1],
-    [0,  0.85, 0.9,  0.9,  0.85, 0],
+    [0,  0.45, 0.50,  0.50,  0.45, 0],
   );
 
   return (
@@ -61,8 +61,8 @@ export const FloatingScrollIcon = ({
       {/* INNER: only idle animate here — zero x/y conflict with outer style */}
       <motion.div
         animate={{
-          x: [0, 9, -7, 5, -4, 0],
-          y: [0, -8, 6,  -5, 7, 0],
+          x: [0, 3, -2, 2, -1, 0],
+          y: [0, -3, 2, -2, 3, 0],
         }}
         transition={{
           duration: loopDuration,
@@ -72,9 +72,9 @@ export const FloatingScrollIcon = ({
         }}
       >
         <div
-          className={`${size} rounded-2xl bg-primary/18 border border-primary/30 backdrop-blur-xl flex items-center justify-center shadow-[0_12px_80px_hsl(var(--primary)/0.42)]`}
+          className={`${size} rounded-2xl bg-primary/10 border border-primary/20 backdrop-blur-xl flex items-center justify-center shadow-[0_8px_40px_hsl(var(--primary)/0.22)]`}
         >
-          <Icon className="w-[42%] h-[42%] text-primary" />
+          <Icon className="w-[42%] h-[42%] text-primary/60" />
         </div>
       </motion.div>
     </motion.div>

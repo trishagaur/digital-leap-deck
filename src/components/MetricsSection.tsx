@@ -1,12 +1,12 @@
 import {
   motion,
-  useInView,
   useReducedMotion,
   useScroll,
 } from "framer-motion";
 import { useRef } from "react";
 import { TrendingUp, Zap, Clock, ShieldCheck, Rocket } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
+import { FloatingScrollCard } from "./FloatingScrollCard";
 
 const metrics = [
   {
@@ -41,26 +41,6 @@ const metrics = [
   },
 ];
 
-const cardVariants = {
-  hidden: (i: number) => ({
-    opacity: 0,
-    x: i % 2 === 0 ? -100 : 100,
-    y: 40,
-    rotateY: i % 2 === 0 ? -8 : 8,
-  }),
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    y: 0,
-    rotateY: 0,
-    transition: {
-      duration: 0.8,
-      delay: 0.1 * i,
-      ease: [0.22, 1, 0.36, 1] as const,
-    },
-  }),
-};
-
 // True off-screen distances — icons travel the full viewport width/height
 const floatingIcons: FloatingIconDef[] = [
   {
@@ -69,7 +49,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1600, y: -1100, rotate: -42 },
     to:   { x:  1200, y:   900, rotate:  28 },
     size: "w-16 h-16",
-    loopDuration: 38,
+    loopDuration: 68,
   },
   {
     icon: Zap,
@@ -77,7 +57,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1550, y: -1050, rotate:  46 },
     to:   { x: -1150, y:   880, rotate: -32 },
     size: "w-14 h-14",
-    loopDuration: 42,
+    loopDuration: 74,
   },
   {
     icon: Clock,
@@ -85,7 +65,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x: -1500, y:  1200, rotate: -38 },
     to:   { x:  1100, y: -1000, rotate:  30 },
     size: "w-20 h-20",
-    loopDuration: 44,
+    loopDuration: 80,
   },
   {
     icon: ShieldCheck,
@@ -93,7 +73,7 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  1450, y:  1150, rotate:  38 },
     to:   { x: -1050, y:  -950, rotate: -28 },
     size: "w-16 h-16",
-    loopDuration: 40,
+    loopDuration: 72,
   },
   {
     icon: Rocket,
@@ -101,13 +81,12 @@ const floatingIcons: FloatingIconDef[] = [
     from: { x:  -200, y: -1400, rotate: -26 },
     to:   { x:   220, y:  1200, rotate:  22 },
     size: "w-14 h-14",
-    loopDuration: 46,
+    loopDuration: 76,
   },
 ];
 
 const MetricsSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, margin: "-60px" });
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -127,34 +106,21 @@ const MetricsSection = () => {
       )}
       
       <div className="section-container relative" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
-        >
+        <FloatingScrollCard scrollYProgress={scrollYProgress} direction="bottom" travel={900} className="text-center mb-20">
           <span className="section-overline">Impact Dashboard</span>
           <h2 className="section-title">Numbers That Speak</h2>
-        </motion.div>
+        </FloatingScrollCard>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto" style={{ perspective: "1000px" }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {metrics.slice(0, 3).map((metric, i) => (
-            <motion.div
+            <FloatingScrollCard
               key={metric.label}
-              custom={i}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-              variants={cardVariants}
-              whileHover={
-                reduceMotion
-                  ? undefined
-                  : {
-                      rotateX: 2,
-                      rotateY: i % 2 === 0 ? -2 : 2,
-                    }
-              }
-              className="bento-card flex flex-col group relative overflow-hidden"
+              scrollYProgress={scrollYProgress}
+              direction={i % 2 === 0 ? "left" : "right"}
+              travel={1800}
+              delay={0.04 * i}
             >
+            <div className="bento-card flex flex-col group relative overflow-hidden h-full">
               <motion.div
                 className="absolute -right-5 -top-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                 animate={
@@ -192,27 +158,20 @@ const MetricsSection = () => {
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {metric.description}
               </p>
-            </motion.div>
+            </div>
+            </FloatingScrollCard>
           ))}
 
           <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto w-full">
             {metrics.slice(3).map((metric, i) => (
-              <motion.div
+              <FloatingScrollCard
                 key={metric.label}
-                custom={i + 3}
-                initial="hidden"
-                animate={isInView ? "visible" : "hidden"}
-                variants={cardVariants}
-                whileHover={
-                  reduceMotion
-                    ? undefined
-                    : {
-                        rotateX: 2,
-                        rotateY: i % 2 === 0 ? -2 : 2,
-                      }
-                }
-                className="bento-card flex flex-col group relative overflow-hidden"
+                scrollYProgress={scrollYProgress}
+                direction={i === 0 ? "left" : "right"}
+                travel={1800}
+                delay={0.04 * (i + 3)}
               >
+              <div className="bento-card flex flex-col group relative overflow-hidden h-full">
                 <motion.div
                   className="absolute -left-5 -bottom-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                   animate={
@@ -250,7 +209,8 @@ const MetricsSection = () => {
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {metric.description}
                 </p>
-              </motion.div>
+              </div>
+              </FloatingScrollCard>
             ))}
           </div>
         </div>
