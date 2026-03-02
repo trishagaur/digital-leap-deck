@@ -57,19 +57,19 @@ const PitchNav = () => {
             >
               <a
                 href={item.href}
-                className="flex items-center gap-1 px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground transition-all duration-300 rounded-full hover:bg-secondary"
+                className="flex items-center gap-1 px-4 py-2 text-sm font-semibold text-foreground/80 hover:text-foreground transition-all duration-300 rounded-full hover:bg-secondary"
               >
                 {item.label}
                 <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${openDropdown === i ? 'rotate-180' : ''}`} />
               </a>
 
               {openDropdown === i && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 glass-panel rounded-xl py-2 min-w-[220px] animate-fade-up shadow-lg">
+                <div className="absolute top-full left-0 mt-1 glass-panel rounded-xl py-2 min-w-[200px] animate-fade-up shadow-lg">
                   {item.subs.map((sub) => (
                     <a
                       key={sub}
                       href={item.href}
-                      className="block px-5 py-2.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all duration-200 rounded-lg mx-1"
+                      className="block px-4 py-2.5 text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all duration-200 rounded-lg mx-1"
                     >
                       {sub}
                     </a>

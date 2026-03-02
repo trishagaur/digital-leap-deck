@@ -23,8 +23,8 @@ const HeroSection = () => {
           alt="Retiree couple confidently using digital services"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-background/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
       </motion.div>
 
       <motion.div className="section-container relative z-10 pt-20" style={{ y: textY, opacity }}>

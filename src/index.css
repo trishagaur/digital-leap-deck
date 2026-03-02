@@ -127,7 +127,7 @@
   }
 
   .section-title {
-    @apply text-5xl sm:text-7xl lg:text-8xl font-black text-foreground tracking-tighter leading-[1.02];
+    @apply text-3xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight;
   }
 }
 
