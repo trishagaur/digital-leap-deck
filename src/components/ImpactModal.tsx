@@ -17,6 +17,10 @@ export interface ModalData {
   chart?: ReactNode;
   /** Tailwind gradient classes for right pane — default blue→indigo */
   accentGradient?: string;
+  /** When provided, shows a split-pane modal with the image filling the right half */
+  image?: string;
+  /** Alt text for the image right pane */
+  imageAlt?: string;
 }
 
 interface ImpactModalProps {
@@ -65,7 +69,7 @@ export const ImpactModal = ({ isOpen, onClose, data }: ImpactModalProps) => {
           {/* ── Panel ── */}
           <motion.div
             className={`relative bg-white rounded-[24px] shadow-2xl overflow-hidden max-w-[90vw] max-h-[85vh] ${
-              data.mode === "detailed" ? "flex w-[860px]" : "w-[520px]"
+              data.image || data.mode === "detailed" ? "flex w-[860px]" : "w-[520px]"
             }`}
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -85,7 +89,7 @@ export const ImpactModal = ({ isOpen, onClose, data }: ImpactModalProps) => {
             {/* ── Left / single pane ── */}
             <div
               className={`p-10 flex flex-col justify-center overflow-y-auto ${
-                data.mode === "detailed" ? "w-[60%] border-r border-gray-100" : "w-full"
+                data.image || data.mode === "detailed" ? "w-[55%] border-r border-gray-100" : "w-full"
               }`}
             >
               {data.overline && (
@@ -118,8 +122,19 @@ export const ImpactModal = ({ isOpen, onClose, data }: ImpactModalProps) => {
               )}
             </div>
 
-            {/* ── Right pane — detailed mode only ── */}
-            {data.mode === "detailed" && data.chart && (
+            {/* ── Right pane — image ── */}
+            {data.image && (
+              <div className="w-[45%] flex-shrink-0 relative overflow-hidden">
+                <img
+                  src={data.image}
+                  alt={data.imageAlt ?? data.title}
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                />
+              </div>
+            )}
+
+            {/* ── Right pane — chart (detailed mode, no image) ── */}
+            {!data.image && data.mode === "detailed" && data.chart && (
               <div
                 className={`w-[40%] flex items-center justify-center p-8 ${
                   data.accentGradient ?? "bg-gradient-to-br from-blue-600 to-indigo-700"

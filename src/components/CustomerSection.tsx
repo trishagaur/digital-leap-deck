@@ -4,13 +4,21 @@ import { FloatingScrollCard } from "./FloatingScrollCard";
 import { ImpactModal, type ModalData } from "./ImpactModal";
 import { useState } from "react";
 
+// ─── Image paths ───────────────────────────────────────────────────────────
+// Drop your replacement images into:  public/images/customers/
+// Then swap the filename below — no other changes needed.
+const IMG = {
+  accessibility:  "/images/customers/accessibility.jpg",
+  trust:          "/images/customers/trust.jpg",
+  independence:   "/images/customers/independence.jpg",
+  inclusion:      "/images/customers/inclusion.jpg",
+};
+
 const stories = [
   {
     id: 0,
-    image:
-      "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=600&q=80",
-    alt: "Elderly woman being assisted with tablet by a carer",
-    watercolor: "hue-rotate-[200deg] saturate-[0.55] brightness-[1.08]",
+    image: IMG.accessibility,
+    alt: "Elderly woman being helped to use a tablet by a nurse in a park",
     category: "Accessibility",
     title: "From Phone Queues to Instant Digital Access",
     accent: "#2563eb",
@@ -20,6 +28,8 @@ const stories = [
       title: "From Phone Queues to Instant Digital Access",
       description:
         "Margaret, 74, spent three weeks on hold trying to access her retirement savings. After the digital transformation, she completed the same process in under eight minutes on her tablet — without a single phone call.",
+      image: IMG.accessibility,
+      imageAlt: "Elderly woman being helped to use a tablet by a nurse in a park",
       bullets: [
         { value: "< 8 min", label: "average digital completion time" },
         { label: "Available 24/7 with no wait times" },
@@ -30,10 +40,8 @@ const stories = [
   },
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80",
-    alt: "Financial advisor meeting with a retired couple",
-    watercolor: "hue-rotate-[10deg] saturate-[0.5] brightness-[1.1]",
+    image: IMG.trust,
+    alt: "Hands holding a glowing globe with a golden key, representing digital trust",
     category: "Trust & Transparency",
     title: "Giving Members Confidence at Every Step",
     accent: "#7c3aed",
@@ -43,6 +51,8 @@ const stories = [
       title: "Giving Members Confidence at Every Step",
       description:
         "Retirement decisions are among the most consequential a person will make. We redesigned the end-to-end journey so members feel informed, in control, and never second-guessing — with AML safeguards running invisibly in the background.",
+      image: IMG.trust,
+      imageAlt: "Hands holding a glowing globe with a golden key, representing digital trust",
       bullets: [
         { label: "Real-time eligibility confirmation before any form is submitted" },
         { label: "Plain-language explanations at each decision point" },
@@ -53,10 +63,8 @@ const stories = [
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=600&q=80",
-    alt: "Senior man smiling while using a smartphone",
-    watercolor: "hue-rotate-[160deg] saturate-[0.5] brightness-[1.06]",
+    image: IMG.independence,
+    alt: "Elderly man standing on a cliff overlooking a city at golden-hour sunset",
     category: "Independence",
     title: "Designing for the Members Who Need It Most",
     accent: "#059669",
@@ -66,6 +74,8 @@ const stories = [
       title: "Designing for the Members Who Need It Most",
       description:
         "Our user research programme involved over 300 hours with real members — including those with low digital literacy, cognitive load challenges, and physical limitations. Every design decision was validated against their lived experience.",
+      image: IMG.independence,
+      imageAlt: "Elderly man standing on a cliff overlooking a city at golden-hour sunset",
       bullets: [
         { value: "300+", label: "hours of member research across all segments" },
         { label: "Tested with members aged 60–85 across 4 states" },
@@ -76,10 +86,8 @@ const stories = [
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80",
-    alt: "Diverse group of older adults in a community setting",
-    watercolor: "hue-rotate-[330deg] saturate-[0.5] brightness-[1.08]",
+    image: IMG.inclusion,
+    alt: "Diverse group of friends arm-in-arm looking at a scenic coastal mountain view",
     category: "Inclusion",
     title: "Retirement is Not One-Size-Fits-All",
     accent: "#dc2626",
@@ -89,6 +97,8 @@ const stories = [
       title: "Retirement is Not One-Size-Fits-All",
       description:
         "Our member base spans cultures, languages, and life circumstances. We built the digital journey to flex around each individual — supporting CALD communities, blended families, and non-standard financial arrangements.",
+      image: IMG.inclusion,
+      imageAlt: "Diverse group of friends arm-in-arm looking at a scenic coastal mountain view",
       bullets: [
         { label: "Multi-language support for CALD member segments" },
         { label: "Flexible journey logic for non-standard withdrawal scenarios" },
@@ -153,11 +163,7 @@ const CustomerSection = () => {
                   <img
                     src={story.image}
                     alt={story.alt}
-                    className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${story.watercolor}`}
-                    style={{
-                      filter:
-                        "saturate(0.55) brightness(1.08) contrast(0.92)",
-                    }}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   {/* Watercolor fade at bottom */}
                   <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent" />
