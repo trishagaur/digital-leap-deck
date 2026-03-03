@@ -1,8 +1,10 @@
+import { useState, useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 import { Bot, GitBranch, ToggleRight, Code, Cpu, Layers } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
 import { FloatingScrollCard } from "./FloatingScrollCard";
+import { ImpactModal, type ModalData } from "./ImpactModal";
+import { AISDLCChart } from "./ModalCharts";
 
 const deliveryItems = [
   {
@@ -60,10 +62,54 @@ const floatingIcons: FloatingIconDef[] = [
   },
 ];
 
+const deliveryModals: ModalData[] = [
+  {
+    mode: "detailed",
+    overline: "AI Engineering",
+    title: "100% AI Adoption Across the SDLC",
+    description:
+      "Every phase from design to deployment was accelerated by AI tooling — reducing effort while improving consistency and quality.",
+    bullets: [
+      { label: "Design: Figma AI + component generation" },
+      { label: "Development: GitHub Copilot + code generation" },
+      { label: "Testing: Automated test scaffolding and coverage" },
+      { label: "Deployment: AI-assisted release planning" },
+    ],
+    chart: <AISDLCChart />,
+    accentGradient: "bg-gradient-to-br from-indigo-600 to-blue-700",
+  },
+  {
+    mode: "simple",
+    overline: "Architecture",
+    title: "Digital Monorepo Architecture",
+    description:
+      "We adopted a digital monorepo early, building reusable Micro-Frontends (MFEs) that allowed consistent patterns across products and enabled teams to ship faster with zero duplication.",
+    bullets: [
+      { label: "Single source of truth across all products" },
+      { label: "Reusable MFE component library" },
+      { label: "Consistent UI patterns across 3 products" },
+      { label: "Rapid feature delivery with no duplication" },
+    ],
+  },
+  {
+    mode: "simple",
+    overline: "Delivery",
+    title: "Safe, Progressive Delivery",
+    description:
+      "Feature flags gave us a deployment superpower: ship code without risk, experiment safely, and roll back instantly when needed.",
+    bullets: [
+      { label: "Progressive rollouts from 1% → 100% of users" },
+      { label: "A/B experimentation without code branches" },
+      { label: "Instant rollback capability in under 30 seconds" },
+      { label: "Dark launches for compliance validation" },
+    ],
+  },
+];
+
 const DeliverySection = () => {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
-
+  const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -107,7 +153,10 @@ const DeliverySection = () => {
               travel={700}
               stagger={i + 1}
             >
-              <div className="bento-card flex items-start gap-6 group">
+              <div
+                className="bento-card flex items-start gap-6 group cursor-pointer"
+                onClick={() => setActiveModal(deliveryModals[i])}
+              >
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                   <item.icon className="w-7 h-7 text-primary" />
                 </div>
@@ -124,6 +173,11 @@ const DeliverySection = () => {
           ))}
         </div>
       </div>
+      <ImpactModal
+        isOpen={activeModal !== null}
+        onClose={() => setActiveModal(null)}
+        data={activeModal}
+      />
     </section>
   );
 };

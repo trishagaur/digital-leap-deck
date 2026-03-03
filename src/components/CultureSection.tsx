@@ -1,8 +1,9 @@
+import { useState, useRef } from "react";
 import { motion, useReducedMotion, useScroll } from "framer-motion";
-import { useRef } from "react";
 import { Heart, MessageCircle, Award, Star, Users } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
 import { FloatingScrollCard } from "./FloatingScrollCard";
+import { ImpactModal, type ModalData } from "./ImpactModal";
 
 const cultureItems = [
   {
@@ -57,10 +58,52 @@ const floatingIcons: FloatingIconDef[] = [
   },
 ];
 
+const cultureModals: ModalData[] = [
+  {
+    mode: "simple",
+    overline: "One-Team Culture",
+    title: "High Trust, High Performance",
+    description:
+      "We built a psychologically safe squad where feedback from peers and Compliance was taken as a gift — not a threat. This high-trust environment enabled us to deliver at a pace typically requiring years of maturity.",
+    bullets: [
+      { label: "No silos, no ego — shared purpose across the whole squad" },
+      { label: "Daily standups with full transparency and no blame" },
+      { label: "Compliance embedded in ceremonies, not bolted on at the end" },
+      { value: "Winner:", label: "\u2018Dream Team\u2019 award" },
+    ],
+  },
+  {
+    mode: "simple",
+    overline: "Psychological Safety",
+    title: "Feedback as a Superpower",
+    description:
+      "In most teams, feedback creates friction. In ours, it created velocity. We institutionalised open feedback loops between engineering, design, and compliance.",
+    bullets: [
+      { label: "Weekly retrospectives with full team participation" },
+      { label: "Compliance embedded in every sprint ceremony" },
+      { label: "Peer feedback integrated into delivery rhythm" },
+      { label: "No surprises — continuous stakeholder alignment" },
+    ],
+  },
+  {
+    mode: "simple",
+    overline: "Recognition",
+    title: "Award-Winning Delivery",
+    description:
+      "External recognition validated what the team already knew: that a culture of excellence, combined with the right tools and trust, produces extraordinary outcomes.",
+    bullets: [
+      { value: "\u2018Innovation Island\u2019", label: "\u2014 Best Digital Initiative" },
+      { value: "\u2018Dream Team\u2019", label: "\u2014 Outstanding Collaboration" },
+      { label: "Nominated across 3 award categories" },
+      { label: "Recognised by 2 independent judging panels" },
+    ],
+  },
+];
+
 const CultureSection = () => {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
-
+  const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -90,7 +133,10 @@ const CultureSection = () => {
               travel={700}
               stagger={i + 1}
             >
-              <div className="bento-card text-center group h-full">
+              <div
+                className="bento-card text-center group h-full cursor-pointer"
+                onClick={() => setActiveModal(cultureModals[i])}
+              >
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                   <item.icon className="w-7 h-7 text-primary" />
                 </div>
@@ -115,6 +161,11 @@ const CultureSection = () => {
           </div>
         </FloatingScrollCard>
       </div>
+      <ImpactModal
+        isOpen={activeModal !== null}
+        onClose={() => setActiveModal(null)}
+        data={activeModal}
+      />
     </section>
   );
 };

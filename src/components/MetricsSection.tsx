@@ -1,12 +1,14 @@
+import { useState, useRef } from "react";
 import {
   motion,
   useReducedMotion,
   useScroll,
 } from "framer-motion";
-import { useRef } from "react";
 import { TrendingUp, Zap, Clock, ShieldCheck, Rocket } from "lucide-react";
 import { FloatingScrollIcon, type FloatingIconDef } from "./FloatingScrollIcon";
 import { FloatingScrollCard } from "./FloatingScrollCard";
+import { ImpactModal, type ModalData } from "./ImpactModal";
+import { GrowthChart, VelocityChart, EfficiencyChart, TrustChart } from "./ModalCharts";
 
 const metrics = [
   {
@@ -85,9 +87,83 @@ const floatingIcons: FloatingIconDef[] = [
   },
 ];
 
+const metricModals: ModalData[] = [
+  {
+    mode: "detailed",
+    overline: "Growth",
+    title: "Accelerating Digital Outcomes",
+    description:
+      "By removing manual friction and leveraging over 300 hours of user research, we saw an immediate and sustained performance uplift across the full member journey.",
+    bullets: [
+      { value: "4.5×", label: "increase in digital completions (29 → 132)" },
+      { value: "+12.8pp", label: "conversion lift in the first six months" },
+      { label: "Driven by redesigned UX and AML automation" },
+    ],
+    chart: <GrowthChart />,
+    accentGradient: "bg-gradient-to-br from-blue-600 to-indigo-700",
+  },
+  {
+    mode: "detailed",
+    overline: "Velocity",
+    title: "AI-First Release Engine",
+    description:
+      "Our squad adopted 100% AI across the SDLC — reducing design effort, automating code generation, and accelerating every phase from ideation to deployment.",
+    bullets: [
+      { value: "12 epics", label: "delivered across Year-1" },
+      { value: "4,400+", label: "story points at ~220 per sprint" },
+      { value: "6", label: "major releases with zero critical incidents" },
+    ],
+    chart: <VelocityChart />,
+    accentGradient: "bg-gradient-to-br from-violet-600 to-purple-700",
+  },
+  {
+    mode: "detailed",
+    overline: "Efficiency",
+    title: "Doing More with Less",
+    description:
+      "AI tooling and monorepo architecture compressed timelines dramatically while cutting infrastructure spend — proving you don’t need more resources, just smarter ones.",
+    bullets: [
+      { value: "~50%", label: "reduction in delivery cycle time" },
+      { value: "$10,000+", label: "annual infrastructure savings" },
+      { label: "Design-to-deploy cycle reduced by half" },
+    ],
+    chart: <EfficiencyChart />,
+    accentGradient: "bg-gradient-to-br from-teal-600 to-emerald-700",
+  },
+  {
+    mode: "detailed",
+    overline: "Trust",
+    title: "Building Member Trust at Scale",
+    description:
+      "AML safeguards and an improved UX drove a step-change in conversion quality — more completions, far fewer ineligible starts.",
+    bullets: [
+      { value: "40%", label: "digital completion conversion rate" },
+      { value: "−26.3pp", label: "reduction in ineligible starts" },
+      { label: "Fully compliant, automated end-to-end journey" },
+    ],
+    chart: <TrustChart />,
+    accentGradient: "bg-gradient-to-br from-rose-600 to-pink-700",
+  },
+  {
+    mode: "simple",
+    overline: "Scale",
+    title: "Six Major Milestones in Year One",
+    description:
+      "From Formation release to the July mega-release, the team shipped six major product releases — a pace most squads take three years to achieve.",
+    bullets: [
+      { value: "Q1", label: "Formation Release — foundation architecture" },
+      { value: "Q2", label: "Core Digital Withdrawal + AML Integration" },
+      { value: "Q2", label: "UX Overhaul — member experience redesign" },
+      { value: "Q3", label: "July Mega-Release — full digital self-service" },
+      { label: "6 releases, zero critical production incidents" },
+    ],
+  },
+];
+
 const MetricsSection = () => {
   const ref = useRef(null);
   const reduceMotion = useReducedMotion();
+  const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -120,7 +196,10 @@ const MetricsSection = () => {
               travel={700}
               stagger={i + 1}
             >
-            <div className="bento-card flex flex-col group relative overflow-hidden h-full">
+            <div
+              className="bento-card flex flex-col group relative overflow-hidden h-full cursor-pointer"
+              onClick={() => setActiveModal(metricModals[i])}
+            >
               <motion.div
                 className="absolute -right-5 -top-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                 animate={
@@ -171,7 +250,10 @@ const MetricsSection = () => {
                 travel={700}
                 stagger={i + 4}
               >
-              <div className="bento-card flex flex-col group relative overflow-hidden h-full">
+              <div
+                className="bento-card flex flex-col group relative overflow-hidden h-full cursor-pointer"
+                onClick={() => setActiveModal(metricModals[i + 3])}
+              >
                 <motion.div
                   className="absolute -left-5 -bottom-5 w-36 h-36 rounded-full bg-primary/20 blur-3xl"
                   animate={
@@ -215,6 +297,11 @@ const MetricsSection = () => {
           </div>
         </div>
       </div>
+      <ImpactModal
+        isOpen={activeModal !== null}
+        onClose={() => setActiveModal(null)}
+        data={activeModal}
+      />
     </section>
   );
 };
