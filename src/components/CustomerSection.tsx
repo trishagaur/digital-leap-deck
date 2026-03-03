@@ -11,10 +11,10 @@ import { useState } from "react";
 // Files live in:  public/images/customers/
 // Rename to match these keys — lowercase, no spaces, .jpg extension.
 const IMG = {
-  accessibility:  "/images/customers/accessibility.jpg",
-  trust:          "/images/customers/trust.jpg",
-  independence:   "/images/customers/independence.jpg",
-  inclusion:      "/images/customers/inclusion.jpg",
+  accessibility:  "./images/customers/accessibility.jpg",
+  trust:          "./images/customers/trust.jpg",
+  independence:   "./images/customers/independence.jpg",
+  inclusion:      "./images/customers/inclusion.jpg",
 };
 
 const stories = [
