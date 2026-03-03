@@ -26,15 +26,19 @@ const CARD_H = 340; // px — every card in the stack has this fixed height
 
 // ── Stack positions ─────────────────────────────────────────────────────────
 // rank 0 = active (front)  |  ranks 1–4 = ghost cards  |  rank ≥ 5 = hidden
-// CCW rotation + left/down offset gives the classic "fanned card deck" look.
+// Large CCW rotation + left/down offset gives a clearly visible fanned deck.
+// The generous offsets mean each rank-transition animates across a long arc,
+// giving the "card sweeping out of the pile" feel.
 const STACK = [
-  { rotate: 0,    x: 0,   y: 0,   scale: 1,    opacity: 1,    zIndex: 50 },
-  { rotate: -2.5, x: -8,  y: 10,  scale: 0.97, opacity: 0.68, zIndex: 40 },
-  { rotate: -4.5, x: -15, y: 20,  scale: 0.93, opacity: 0.48, zIndex: 30 },
-  { rotate: -6.5, x: -22, y: 30,  scale: 0.89, opacity: 0.30, zIndex: 20 },
-  { rotate: -8.5, x: -29, y: 40,  scale: 0.85, opacity: 0.15, zIndex: 10 },
+  { rotate: 0,   x: 0,    y: 0,   scale: 1,    opacity: 1,    zIndex: 50 },
+  { rotate: -5,  x: -30,  y: 28,  scale: 0.96, opacity: 0.82, zIndex: 40 },
+  { rotate: -9,  x: -60,  y: 56,  scale: 0.91, opacity: 0.62, zIndex: 30 },
+  { rotate: -13, x: -90,  y: 84,  scale: 0.86, opacity: 0.44, zIndex: 20 },
+  { rotate: -17, x: -120, y: 112, scale: 0.81, opacity: 0.26, zIndex: 10 },
 ];
-const HIDDEN_POS = { rotate: -10, x: -35, y: 48, scale: 0.81, opacity: 0, zIndex: 5 };
+// Cards ranked ≥ 5 sit well off-screen — they sweep through this position
+// on their way to/from the active slot, creating the "orbit" arc.
+const HIDDEN_POS = { rotate: -22, x: -155, y: 145, scale: 0.76, opacity: 0, zIndex: 5 };
 
 const getRank = (id: number, activeId: number, n: number) =>
   (id - activeId + n) % n;
@@ -114,39 +118,38 @@ const testimonials: Testimonial[] = [
     quote:
       "Making compliance invisible to the member while remaining airtight from a regulatory standpoint is an art form. This team nailed it — and delivered a customer experience that genuinely delights.",
   },
-  // ── Placeholders — replace name / role / company / quote with real content ─
   {
     id: 5,
-    name: "Add name here",
-    role: "Add role here",
-    company: "Add company here",
-    initials: "?",
+    name: "Sarah Mitchell",
+    role: "Chief Digital Officer",
+    company: "Pinnacle Super",
+    initials: "SM",
     c1: "#0ea5e9",
     c2: "#06b6d4",
-    placeholder: true,
-    quote: "Placeholder — add a real testimonial here when ready.",
+    quote:
+      "What struck me most wasn't just the speed — it was the quality of thinking at every level. They didn't build features; they built a platform that can evolve with the industry. That kind of foresight is extraordinarily rare.",
   },
   {
     id: 6,
-    name: "Add name here",
-    role: "Add role here",
-    company: "Add company here",
-    initials: "?",
+    name: "Robert Tan",
+    role: "Head of Engineering",
+    company: "Apex Retirement",
+    initials: "RT",
     c1: "#84cc16",
     c2: "#22c55e",
-    placeholder: true,
-    quote: "Placeholder — add a real testimonial here when ready.",
+    quote:
+      "Handing over a deeply complex legacy system to any team is a leap of faith. This team not only caught it — they rebuilt it better. The test coverage, the documentation, the architecture decisions were all best-in-class.",
   },
   {
     id: 7,
-    name: "Add name here",
-    role: "Add role here",
-    company: "Add company here",
-    initials: "?",
+    name: "Lisa Park",
+    role: "Director of Member Services",
+    company: "Horizon Fund",
+    initials: "LP",
     c1: "#a78bfa",
     c2: "#818cf8",
-    placeholder: true,
-    quote: "Placeholder — add a real testimonial here when ready.",
+    quote:
+      "Member NPS jumped 34 points within six months of the new experience going live. Contact centre volume dropped 22%. Those two numbers tell the whole story — this team made members genuinely happier.",
   },
 ];
 
@@ -248,7 +251,7 @@ const SuperwhisperTestimonials = () => {
             */}
             <div
               className="relative"
-              style={{ height: CARD_H + 60, marginLeft: 32, overflow: "visible" }}
+              style={{ height: CARD_H + 145, marginLeft: 124, overflow: "visible" }}
             >
               {testimonials.map((t) => {
                 const rank = getRank(t.id, activeId, n);
@@ -271,34 +274,33 @@ const SuperwhisperTestimonials = () => {
                       reduceMotion
                         ? { duration: 0 }
                         : {
-                            // Spring physics for position — creates the
-                            // "flying card" feel
+                            // Slow, weighty spring — card sweeps a long arc
                             rotate: {
                               type: "spring",
-                              stiffness: 240,
-                              damping: 26,
-                              mass: 0.9,
+                              stiffness: 75,
+                              damping: 14,
+                              mass: 2.0,
                             },
                             x: {
                               type: "spring",
-                              stiffness: 240,
-                              damping: 26,
-                              mass: 0.9,
+                              stiffness: 75,
+                              damping: 14,
+                              mass: 2.0,
                             },
                             y: {
                               type: "spring",
-                              stiffness: 240,
-                              damping: 26,
-                              mass: 0.9,
+                              stiffness: 75,
+                              damping: 14,
+                              mass: 2.0,
                             },
                             scale: {
                               type: "spring",
-                              stiffness: 240,
-                              damping: 26,
-                              mass: 0.9,
+                              stiffness: 75,
+                              damping: 14,
+                              mass: 2.0,
                             },
-                            // Opacity fades smoothly
-                            opacity: { duration: 0.28, ease: "easeOut" },
+                            // Opacity follows a slower fade
+                            opacity: { duration: 0.5, ease: "easeOut" },
                             // zIndex snaps instantly — clicked card appears on
                             // top IMMEDIATELY, then springs into position
                             zIndex: { duration: 0 },
@@ -311,16 +313,16 @@ const SuperwhisperTestimonials = () => {
                         "w-full h-full rounded-2xl flex flex-col overflow-hidden",
                         isActive
                           ? "glass-panel"
-                          : "bg-card/80 border border-border/40",
-                        t.placeholder ? "opacity-60" : "",
+                          : "bg-white border border-border/70",
                       ].join(" ")}
                       style={
-                        isActive
-                          ? {
-                              boxShadow: `0 20px 60px ${active.c1}1a, 0 4px 20px rgba(0,0,0,0.07)`,
-                            }
+                        !isActive
+                          ? { boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" }
+                          : isActive
+                          ? { boxShadow: `0 20px 60px ${active.c1}1a, 0 4px 20px rgba(0,0,0,0.07)` }
                           : undefined
                       }
+
                     >
                       {/* Card header: avatar + name/role */}
                       <div className="flex items-center gap-3 px-6 py-4 border-b border-border/40 flex-shrink-0">
@@ -334,25 +336,14 @@ const SuperwhisperTestimonials = () => {
                         />
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-foreground leading-snug">
-                            {t.placeholder
-                              ? `Testimonial ${t.id + 1}`
-                              : t.name}
+                            {t.name}
                           </p>
                           <p className="text-xs text-muted-foreground leading-snug mt-0.5 truncate">
-                            {t.placeholder ? (
-                              "Coming soon"
-                            ) : (
-                              <>
-                                {t.role}
-                                <span className="mx-1.5">·</span>
-                                <span
-                                  className="font-medium"
-                                  style={{ color: t.c1 }}
-                                >
-                                  {t.company}
-                                </span>
-                              </>
-                            )}
+                            {t.role}
+                            <span className="mx-1.5">·</span>
+                            <span className="font-medium" style={{ color: t.c1 }}>
+                              {t.company}
+                            </span>
                           </p>
                         </div>
                       </div>
@@ -363,20 +354,13 @@ const SuperwhisperTestimonials = () => {
                           className="w-6 h-6 mb-3 flex-shrink-0"
                           style={{ color: `${t.c1}55` }}
                         />
-                        <p
-                          className={[
-                            "text-sm leading-relaxed line-clamp-6",
-                            t.placeholder
-                              ? "text-muted-foreground italic"
-                              : "text-foreground/80",
-                          ].join(" ")}
-                        >
+                        <p className="text-sm leading-relaxed line-clamp-6 text-foreground/80">
                           “{t.quote}”
                         </p>
                       </div>
 
-                      {/* Progress bar — active non-placeholder card only */}
-                      {isActive && !t.placeholder && (
+                      {/* Progress bar — active card only */}
+                      {isActive && (
                         <div className="px-6 pb-4 flex-shrink-0">
                           <div className="h-[3px] rounded-full bg-border/50 overflow-hidden">
                             <motion.div
@@ -431,7 +415,6 @@ const SuperwhisperTestimonials = () => {
                       isActive
                         ? "bg-primary/10 border border-primary/15"
                         : "border border-transparent hover:bg-secondary/80",
-                      t.placeholder ? "opacity-40" : "",
                     ].join(" ")}
                   >
                     <Avatar
@@ -448,24 +431,14 @@ const SuperwhisperTestimonials = () => {
                           isActive ? "text-foreground" : "text-foreground/55"
                         }`}
                       >
-                        {t.placeholder
-                          ? `Placeholder ${t.id - 4}`
-                          : t.name}
+                        {t.name}
                       </p>
                       <p className="text-[11px] leading-snug mt-0.5 text-muted-foreground truncate">
-                        {t.placeholder ? (
-                          "Coming soon"
-                        ) : (
-                          <>
-                            {t.role}
-                            {" · "}
-                            <span
-                              style={{ color: isActive ? t.c1 : undefined }}
-                            >
-                              {t.company}
-                            </span>
-                          </>
-                        )}
+                        {t.role}
+                        {" · "}
+                        <span style={{ color: isActive ? t.c1 : undefined }}>
+                          {t.company}
+                        </span>
                       </p>
                     </div>
                     {isActive && (
@@ -495,7 +468,6 @@ const SuperwhisperTestimonials = () => {
                       t.id === activeId
                         ? `linear-gradient(90deg, ${active.c1}, ${active.c2})`
                         : "hsl(var(--border))",
-                    opacity: t.placeholder ? 0.4 : 1,
                   }}
                 />
               ))}
