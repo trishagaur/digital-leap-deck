@@ -90,6 +90,8 @@ const deliveryModals: ModalData[] = [
       { label: "Consistent UI patterns across 3 products" },
       { label: "Rapid feature delivery with no duplication" },
     ],
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=900&q=80",
+    imageAlt: "Server racks and network infrastructure representing modern architecture",
   },
   {
     mode: "simple",
@@ -103,6 +105,8 @@ const deliveryModals: ModalData[] = [
       { label: "Instant rollback capability in under 30 seconds" },
       { label: "Dark launches for compliance validation" },
     ],
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=80",
+    imageAlt: "Dashboard with data charts and toggle controls representing feature-flag delivery",
   },
 ];
 

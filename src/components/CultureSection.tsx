@@ -71,6 +71,8 @@ const cultureModals: ModalData[] = [
       { label: "Compliance embedded in ceremonies, not bolted on at the end" },
       { value: "Winner:", label: "\u2018Dream Team\u2019 award" },
     ],
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80",
+    imageAlt: "Diverse team collaborating around a table with energy and focus",
   },
   {
     mode: "simple",
@@ -84,6 +86,8 @@ const cultureModals: ModalData[] = [
       { label: "Peer feedback integrated into delivery rhythm" },
       { label: "No surprises — continuous stakeholder alignment" },
     ],
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&q=80",
+    imageAlt: "Team in an open discussion, whiteboard in background",
   },
   {
     mode: "simple",
@@ -97,6 +101,8 @@ const cultureModals: ModalData[] = [
       { label: "Nominated across 3 award categories" },
       { label: "Recognised by 2 independent judging panels" },
     ],
+    image: "https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=900&q=80",
+    imageAlt: "Golden trophy award on a podium representing recognition and excellence",
   },
 ];
 

@@ -7,6 +7,9 @@ import { useState } from "react";
 // ─── Image paths ───────────────────────────────────────────────────────────
 // Drop your replacement images into:  public/images/customers/
 // Then swap the filename below — no other changes needed.
+// ─── Image paths ───────────────────────────────────────────────────────────
+// Files live in:  public/images/customers/
+// Rename to match these keys — lowercase, no spaces, .jpg extension.
 const IMG = {
   accessibility:  "/images/customers/accessibility.jpg",
   trust:          "/images/customers/trust.jpg",
