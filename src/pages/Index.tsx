@@ -5,7 +5,8 @@ import CustomerSection from "@/components/CustomerSection";
 import MetricsSection from "@/components/MetricsSection";
 import DeliverySection from "@/components/DeliverySection";
 import CultureSection from "@/components/CultureSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
+// import TestimonialsSection from "@/components/TestimonialsSection"; // ← swap back here
+import SuperwhisperTestimonials from "@/components/SuperwhisperTestimonials";
 
 const Index = () => {
   return (
@@ -17,7 +18,8 @@ const Index = () => {
       <MetricsSection />
       <DeliverySection />
       <CultureSection />
-      <TestimonialsSection />
+      {/* <TestimonialsSection /> */}
+      <SuperwhisperTestimonials />
     </div>
   );
 };
